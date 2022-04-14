@@ -1,11 +1,23 @@
+
 #include "mvtperso.h"
+#include "Plateformes.h"
+
+
+//on code le personnage depuis le coin haut gauche
+
+
 
 int main() {
-    const int w=500;
-    const int h=500;
+    openWindow(WindW,WindH);
+    plateforme Niveau1_sol=plateforme(3,sol_segments_niveau_1());
+    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
+    while(true){
+        Niveau1_sol.draw();
+        Niveau1_plafond.draw();
+        gametest(WindW,WindH);
 
-    openWindow(w,h);
-    gametest(w,h);
+    }
+
 
     return 0;
 }

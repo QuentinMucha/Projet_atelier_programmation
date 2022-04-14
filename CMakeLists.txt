@@ -6,5 +6,6 @@ find_package(Imagine REQUIRED)
 
 project(Jeu_portal)
 
-add_executable(Jeu_portal Jeu_portal.cpp mvtperso.cpp mvtperso.h)
+
+add_executable(Jeu_portal Jeu_portal.cpp mvtperso.cpp mvtperso.h Plateformes.h Plateforme.cpp)
 ImagineUseModules(Jeu_portal Graphics)
