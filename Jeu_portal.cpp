@@ -1,12 +1,11 @@
-#include <cmath>
-#include <iostream>
-#include <assert.h>
-#include <cstdlib>
-#include <ctime>
-#include <Imagine/Graphics.h>
-
+#include "mvtperso.h"
 
 int main() {
+    const int w=500;
+    const int h=500;
+
+    openWindow(w,h);
+    gametest(w,h);
 
     return 0;
 }
