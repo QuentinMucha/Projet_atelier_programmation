@@ -8,20 +8,25 @@
 using namespace Imagine;
 
 int keyboard();
+
 struct point {
     int x;
     int y;
 };
 
+
+
 class Personnage{
     point position;
+    point vitesse={0,0};
+
 public:
     Personnage(int x, int y);
     point get_position();
-    void draw_perso();
-    void erase_perso();
-    void move(int a);
-    void saut();
+    void gravite(bool b,int dt);
+    void modif_vitesse(int a, bool& b);
+    void mouvement(int dt);
+    void frein(bool b);
 
 };
 
