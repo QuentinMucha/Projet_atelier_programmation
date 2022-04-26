@@ -33,8 +33,10 @@ void Personnage::modif_vitesse(int a, bool &b){ // a variable retournée par key
         vitesse.x=5;
     }
     if (a==16777235){
-        vitesse.y=-15;
-        b=true;
+        if (vitesse.y==0){
+            vitesse.y=-15;
+            b=true;
+        }
     }
 
 }
@@ -69,8 +71,28 @@ void Personnage::frein(bool b){
     }
 }
 
+void Personnage::affiche_perso(NativeBitmap I[6], int a){
+    //Déplacement à gauche
+    if (a==16777234){
+        putNativeBitmap(position.x,position.y,I[3]);
+    }
+    //Déplacement à droite
+    else if (a==16777236){
+        putNativeBitmap(position.x,position.y,I[2]);
+    }
+    else {
+        putNativeBitmap(position.x,position.y,I[0]);
+    }
+}
 
-void gametest(int w,int h){
+void Personnage::efface_perso(int W1,int H1){
+
+    fillRect(position.x, position.y, W1, H1, WHITE);
+}
+
+
+
+void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
     Personnage Perso(w/2, h/2);
     point P=Perso.get_position();
@@ -82,11 +104,11 @@ void gametest(int w,int h){
         Perso.gravite(b,dt);
         Perso.frein(b);
         Perso.mouvement(dt);
-        fillRect(P.x,P.y,10,10,WHITE);
+        fillRect(P.x,P.y,W1+1,H1+1,WHITE);
         a=keyboard();
         Perso.modif_vitesse(a,b);
         P =Perso.get_position();
-        fillRect(P.x,P.y,10,10,BLUE);
+        Perso.affiche_perso(I,a);
         milliSleep(dt);
     }
 }

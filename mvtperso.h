@@ -7,13 +7,14 @@
 #include <Imagine/Graphics.h>
 using namespace Imagine;
 
+
+
 int keyboard();
 
 struct point {
     int x;
     int y;
 };
-
 
 
 class Personnage{
@@ -27,7 +28,10 @@ public:
     void modif_vitesse(int a, bool& b);
     void mouvement(int dt);
     void frein(bool b);
+    void affiche_perso(NativeBitmap I[6], int a);
+    void efface_perso(int W1,int H1);
 
 };
 
-void gametest(int w, int h);
+void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]);
+
