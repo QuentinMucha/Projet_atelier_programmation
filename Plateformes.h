@@ -21,10 +21,9 @@ struct Segment_plateforme{
 };
 
 class plateforme{ //une plateforme est une liste de segments
+public:
     int nombre_segment;
     Segment_plateforme* Liste_Segment;
-
-public:
     void destructeur();
     plateforme(int NBR_Seg,Segment_plateforme* LISTE_SEG); //constructeur
     void draw(int K); // si K=1 c'est un sol si K=2 c'est un plafond
@@ -33,3 +32,4 @@ public:
 Segment_plateforme* sol_segments_niveau_1();
 Segment_plateforme* plafond_segments_niveau_1();
 int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur); //ventre est l'epaisseur du personnage
+bool* Collisions(plateforme ASols, plateforme APlafonds,int X_hero,int Y_hero);

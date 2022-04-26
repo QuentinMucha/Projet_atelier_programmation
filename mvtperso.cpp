@@ -1,4 +1,6 @@
 #include "mvtperso.h"
+#include "Plateformes.h"
+
 
 int keyboard() {
     Event e;
@@ -78,6 +80,10 @@ void gametest(int w,int h){
     int a=0;
     bool b = false; // booléen : personnage sur une plateforme b=false ou non b=true
     int dt =1;
+    plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1());
+    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
+    Niveau1_sol.draw(2);
+    Niveau1_plafond.draw(1);
     while(true){
         Perso.gravite(b,dt);
         Perso.frein(b);
@@ -88,5 +94,21 @@ void gametest(int w,int h){
         P =Perso.get_position();
         fillRect(P.x,P.y,10,10,BLUE);
         milliSleep(dt);
+
+        //affichage numero plateforme
+        drawString(WindW-200,20,std::to_string(plateforme_personnage(P.x,Ventre_hero,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)),RED);
+        milliSleep(10);
+        fillRect(WindW-200,0,200,20,WHITE);
+        if(plateforme_personnage(P.x,Ventre_hero,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)==-1){
+            drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
+        }
+        //fin affichage
+        if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y)[1]){
+            drawString(w/2,10+h/2,"IL EST COLLISIONE",RED,15);
+
+        }
+
     }
+    Niveau1_plafond.destructeur();
+    Niveau1_sol.destructeur();
 }
