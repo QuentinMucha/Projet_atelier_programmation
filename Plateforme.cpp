@@ -69,14 +69,20 @@ int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_pl
 
 bool* Collisions(Segment_plateforme* Sols,int NbrSols, Segment_plateforme* Plafonds,int NbrPlafonds,int X_hero,int Y_hero){
     int plate_hero=plateforme_personnage(X_hero,Ventre_hero,Sols,NbrSols);
-    bool* Resultatt=new bool[2];  //(X,Y)
-    Resultatt[0]=false;
-    Resultatt[1]=false;
-    if((Y_hero+Taille_hero)<=Sols[plate_hero].altitude)
+    bool* Resultatt=new bool[3];  //(X,Y)
+    Resultatt[0]=false;//collision droite ou gauche
+    Resultatt[1]=false;//collision sol
+    Resultatt[3]=false;//collision plafond
+    if((Y_hero+Taille_hero)<=Sols[plate_hero].altitude) //si en dessous du sol
         Resultatt[1]=true;
-    //    if((((Y_hero+Taille_hero)<Sols[plate_hero+1].altitude)||((Y_hero+Taille_hero)<Sols[plate_hero-1].altitude))){//what if out of range :(
+
     if(plate_hero==0){ //si a gauche de l'ecran
         if(X_hero<=Sols[plate_hero].extremite_G){ //si on sort de l'image a gauche
+            Resultatt[0]=true;
+        }
+    }
+    if(plate_hero==NbrSols-1){ //si a droite de l'ecran
+        if(X_hero>=Sols[plate_hero].extremite_D-Ventre_hero){ //si on sort de l'image a gauche
             Resultatt[0]=true;
         }
     }
