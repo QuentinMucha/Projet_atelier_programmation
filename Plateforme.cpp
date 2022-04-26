@@ -33,7 +33,7 @@ void plateforme::destructeur(){
 Segment_plateforme* sol_segments_niveau_1(){
     Segment_plateforme* Resultat=new Segment_plateforme[4];
     Resultat[0]={0,250,WindH-10,9};
-    Resultat[1]={250,300,-10,10,true};
+    Resultat[1]={250,300,WindH+10,10,true};
     Resultat[2]={300,350,WindH-50,9};
     Resultat[3]={350,WindW,WindH-100,9};
     return Resultat;
@@ -59,22 +59,32 @@ bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_
 
 
 int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur){
+    int Moitie_droite=X_personnage+ventre/2;
+    int Moitie_gauche=X_personnage-ventre/2;
     for(int i=0;i<Longueur;i++){
-        if((X_personnage<Seg_plat[i].extremite_D)&&((X_personnage-ventre)>=(Seg_plat[i].extremite_G))){
+        if((Moitie_gauche<=Seg_plat[i].extremite_D)&&((Moitie_droite)>=(Seg_plat[i].extremite_G))){
             return i;
         }
     }
+    std::cout<<"plateforme -1";
     return -1;
 }
 
-bool* Collisions(Segment_plateforme* Sols,int NbrSols, Segment_plateforme* Plafonds,int NbrPlafonds,int X_hero,int Y_hero){
+bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero){
+    int NbrSols=ASols.nombre_segment;
+    Segment_plateforme* Sols=ASols.Liste_Segment;
+    int NbrPlafonds=APlafonds.nombre_segment;
+    Segment_plateforme* Plafonds=APlafonds.Liste_Segment;
+
     int plate_hero=plateforme_personnage(X_hero,Ventre_hero,Sols,NbrSols);
     bool* Resultatt=new bool[3];  //(X,Y)
     Resultatt[0]=false;//collision droite ou gauche
     Resultatt[1]=false;//collision sol
-    Resultatt[3]=false;//collision plafond
-    if((Y_hero+Taille_hero)<=Sols[plate_hero].altitude) //si en dessous du sol
+    Resultatt[2]=false;//collision plafond
+    assert(plate_hero>-1);
+    if((Y_hero+Taille_hero)>=Sols[plate_hero].altitude){ //si en dessous du sol
         Resultatt[1]=true;
+    }
 
     if(plate_hero==0){ //si a gauche de l'ecran
         if(X_hero<=Sols[plate_hero].extremite_G){ //si on sort de l'image a gauche
@@ -104,9 +114,10 @@ bool* Collisions(Segment_plateforme* Sols,int NbrSols, Segment_plateforme* Plafo
             }
         }
     }
-//il est encore necessaire de faire les collisions au plafond, et sur le bord gauche
-
-
+    if((Y_hero)<=Plafonds[plate_hero].altitude) //si au dessus du plafond
+        Resultatt[2]=true;
+    //il est encore necessaire de faire les collisions au plafond
+    return Resultatt;
 }
 
 

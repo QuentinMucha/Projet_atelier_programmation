@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <Imagine/Graphics.h>
+#include <string>
 using namespace Imagine;
 
 

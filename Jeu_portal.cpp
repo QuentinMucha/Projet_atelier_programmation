@@ -58,17 +58,11 @@ int main() {
     NativeBitmap Images_perso[6]={perso_statique_d,perso_statique_g,
                                   perso_mvt1_d, perso_mvt1_g, perso_mvt2_d, perso_mvt2_g};
 
-
-    plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1());
-    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     while(true){
-        Niveau1_sol.draw(2);
-        Niveau1_plafond.draw(1);
+
         gametest(WindW,WindH,Ventre_hero1,Taille_hero1,Images_perso);
 
     }
-    Niveau1_plafond.destructeur();
-    Niveau1_sol.destructeur();
 
     return 0;
 }
