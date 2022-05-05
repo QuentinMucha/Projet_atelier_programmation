@@ -30,18 +30,18 @@ void plateforme::destructeur(){
     delete[] Liste_Segment;
 }
 
-Segment_plateforme* sol_segments_niveau_1(){
+Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero){
     Segment_plateforme* Resultat=new Segment_plateforme[4];
-    Resultat[0]={0,250,WindH-10,9};
-    Resultat[1]={250,300,WindH+10,10,true};
-    Resultat[2]={300,350,WindH-50,9};
-    Resultat[3]={350,WindW,WindH-100,9};
+    Resultat[0]={0,WindW/2,9*WindH/10,9};
+    Resultat[1]={WindW/2,WindW/2+3*Ventre_hero,WindH+10,10,true};
+    Resultat[2]={WindW/2+3*Ventre_hero,WindW/2+5*Ventre_hero,9*WindH/10-Taille_hero,9};
+    Resultat[3]={WindW/2+5*Ventre_hero,WindW,9*WindH/10-2*Taille_hero,9};
     return Resultat;
 }
 
 Segment_plateforme* plafond_segments_niveau_1(){
     Segment_plateforme* Resultat=new Segment_plateforme[3];
-    Resultat[0]={0,500,WindH-400,9};
+    Resultat[0]={0,WindW,WindH/10,9};
 
     return Resultat;
 }
@@ -70,7 +70,7 @@ int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_pl
     return -1;
 }
 
-bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero){
+bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero){
     int NbrSols=ASols.nombre_segment;
     Segment_plateforme* Sols=ASols.Liste_Segment;
     int NbrPlafonds=APlafonds.nombre_segment;

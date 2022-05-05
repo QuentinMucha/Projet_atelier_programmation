@@ -31,7 +31,9 @@ public:
     void frein(bool b);
     void affiche_perso(NativeBitmap I[6], int a);
     void efface_perso(int W1,int H1);
-
+    void Change_coord_perso(int X,int Y);
+    void Change_vitesse_perso(int vx,int vy);
+    point get_speed();
 };
 
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]);

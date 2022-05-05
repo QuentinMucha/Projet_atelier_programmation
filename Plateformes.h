@@ -7,10 +7,8 @@
 #include <Imagine/Graphics.h>
 using namespace Imagine;
 
-const int WindW=500;
-const int WindH=500;
-const int Ventre_hero=10;
-const int Taille_hero=10;
+const int WindW=1500;
+const int WindH=900;
 
 struct Segment_plateforme{
     int extremite_G;
@@ -29,7 +27,7 @@ public:
     void draw(int K); // si K=1 c'est un sol si K=2 c'est un plafond
 };
 
-Segment_plateforme* sol_segments_niveau_1();
+Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero);
 Segment_plateforme* plafond_segments_niveau_1();
 int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur); //ventre est l'epaisseur du personnage
-bool* Collisions(plateforme ASols, plateforme APlafonds,int X_hero,int Y_hero);
+bool* Collisions(plateforme ASols, plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero);
