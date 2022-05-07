@@ -48,7 +48,7 @@ void Personnage::modif_vitesse(int a, bool &Au_sol){ // a variable retournée pa
         vitesse.x=5;
     }
     if (a==16777235){
-        if (vitesse.y==0){
+        if (Au_sol){
             vitesse.y=-15;
             Au_sol=false;
         }
