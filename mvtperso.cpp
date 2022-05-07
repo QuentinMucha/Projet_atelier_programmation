@@ -35,7 +35,7 @@ void Personnage::Change_vitesse_perso(int vx,int vy){
 }
 
 void Personnage::Change_coord_perso(int X,int Y){
-position={X,Y};
+    position={X,Y};
 }
 
 void Personnage::modif_vitesse(int a, bool &Au_sol){ // a variable retournée par keyboard
@@ -148,11 +148,12 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
     while(true){
-        Naturel(Perso,Au_Sol,dt);
+
         fillRect(P.x,P.y,W1+1,H1,WHITE);
 
         a=keyboard();
         Perso.modif_vitesse(a,Au_Sol);
+        Naturel(Perso,Au_Sol,dt);
         P =Perso.get_position();
 
 
@@ -167,10 +168,11 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
             drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
         }
         //fin affichage
+
+
         if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1)[1]){
             Perso.Change_coord_perso(P.x,Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)].altitude-H1);
             Au_Sol=true;
-            Perso.Change_vitesse_perso(Perso.get_speed().x,0);
             Niveau1_sol.draw(2);
         }
 
