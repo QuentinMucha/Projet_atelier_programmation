@@ -38,7 +38,7 @@ void Personnage::Change_coord_perso(int X,int Y){
 position={X,Y};
 }
 
-void Personnage::modif_vitesse(int a, bool &b){ // a variable retournée par keyboard
+void Personnage::modif_vitesse(int a, bool &Au_sol){ // a variable retournée par keyboard
     //Déplacement à gauche
     if (a==16777234){
         vitesse.x=-5;
@@ -50,7 +50,7 @@ void Personnage::modif_vitesse(int a, bool &b){ // a variable retournée par key
     if (a==16777235){
         if (vitesse.y==0){
             vitesse.y=-15;
-            b=true;
+            Au_sol=false;
         }
     }
 
@@ -83,14 +83,14 @@ void Personnage::frein(bool Au_sol){
         }
     }
 
-//    if(b){ //si on est au sol il faut freiner aussi
-//        if (vitesse.x>0){
-//            vitesse.x=vitesse.x-1;
-//        }
-//        if(vitesse.x<0){
-//            vitesse.x=vitesse.x+1;
-//        }
-//    }
+    //    if(b){ //si on est au sol il faut freiner aussi
+    //        if (vitesse.x>0){
+    //            vitesse.x=vitesse.x-1;
+    //        }
+    //        if(vitesse.x<0){
+    //            vitesse.x=vitesse.x+1;
+    //        }
+    //    }
 }
 
 void Naturel(Personnage& Perso,bool b,int dt){
@@ -102,17 +102,31 @@ void Naturel(Personnage& Perso,bool b,int dt){
 //affichage
 void Personnage::affiche_perso(NativeBitmap I[6], int a){
     //Déplacement à gauche
+
     if (a==16777234){
+        dir =1;
         putNativeBitmap(position.x,position.y,I[3]);
+
     }
     //Déplacement à droite
     else if (a==16777236){
+        dir =0;
         putNativeBitmap(position.x,position.y,I[2]);
+
     }
-    else {
-        putNativeBitmap(position.x,position.y,I[0]);
+    else{
+        if (dir == 1){
+            putNativeBitmap(position.x,position.y,I[1]);
+        }
+        if (dir == 0){
+            putNativeBitmap(position.x,position.y,I[0]);
+        }
     }
 }
+
+
+
+
 
 void Personnage::efface_perso(int W1,int H1){
 
@@ -127,7 +141,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
     int a=0;
-    bool Au_Sol = false; // booléen : personnage sur une plateforme b=false ou non b=true
+    bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
     int dt =1;
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
     plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());

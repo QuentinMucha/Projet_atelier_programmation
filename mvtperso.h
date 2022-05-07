@@ -21,6 +21,7 @@ struct point {
 class Personnage{
     point position;
     point vitesse={0,0};
+    int dir=0;
 
 public:
     Personnage(int x, int y);
