@@ -125,7 +125,7 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 }
 
 
-
+//reactiver gravite quand on quitte plateforme
 
 
 void Personnage::efface_perso(int W1,int H1){
@@ -171,7 +171,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)];
 
-        if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1)[1]){
+        if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1)[1]){ //si le hero a les pied sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
             Niveau1_sol.draw(2);
@@ -181,9 +181,6 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
            Au_Sol=false;
         }
 
-        if(NotrePlateforme.altitude>Perso.get_position().y+H1){ //si pas de plateforme aux pieds
-            Au_Sol=false;
-        }
     }
     Niveau1_plafond.destructeur();
     Niveau1_sol.destructeur();

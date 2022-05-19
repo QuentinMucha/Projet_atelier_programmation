@@ -62,7 +62,7 @@ int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_pl
     int Moitie_droite=X_personnage+ventre/2;
     int Moitie_gauche=X_personnage-ventre/2;
     for(int i=0;i<Longueur;i++){
-        if((Moitie_gauche<=Seg_plat[i].extremite_D)&&((Moitie_droite)>=(Seg_plat[i].extremite_G))){
+        if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
         }
     }
