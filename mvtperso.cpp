@@ -169,20 +169,22 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         }
         //fin affichage
 
+        Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)];
 
         if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1)[1]){
-            Perso.Change_coord_perso(P.x,Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)].altitude-H1);
+            Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
             Niveau1_sol.draw(2);
         }
 
-        if(Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)].Vide){ //si c'est vide en dessous
+        if(NotrePlateforme.Vide){ //si c'est vide en dessous
            Au_Sol=false;
         }
-    }
-        if(Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)].altitude>Perso.get_position().y+H1){ //si pas de plateforme aux pieds
+
+        if(NotrePlateforme.altitude>Perso.get_position().y+H1){ //si pas de plateforme aux pieds
             Au_Sol=false;
         }
+    }
     Niveau1_plafond.destructeur();
     Niveau1_sol.destructeur();
 }
