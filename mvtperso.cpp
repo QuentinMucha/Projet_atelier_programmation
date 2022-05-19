@@ -2,6 +2,11 @@
 #include "Plateformes.h"
 #include "Portail.h"
 
+void Vecteur_norme(point p, point& N){
+    N.x =2*1/sqrt(p.x*p.x+p.y*p.y) * p.x;
+    N.y =2*1/sqrt(p.x*p.x+p.y*p.y) * p.y;
+
+}
 
 void keyboard(point& p, int& a, int& j) {
     Event e;
@@ -155,30 +160,36 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
-//<<<<<<< HEAD
-//    while(true){
-        
-//        fillRect(P.x,P.y,W1+1,H1,WHITE);//efface ancienne position
-//        a=keyboard();
-//        Perso.modif_vitesse(a,Au_Sol);
-//        Naturel(Perso,Au_Sol,dt);
-
-
-//        P=Perso.get_position();
-//=======
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={-1000,-1000};
 
+    point vecteur={0,0};
+    point norm={0,0};
+    point projection={0,0};
+
     while(true){
+
+        vecteur.x = souris.x -P.x;
+        vecteur.y = souris.y -P.y;
+        Vecteur_norme(vecteur,norm);
+        projection=souris;
+
+        while (projection.x < WindW && projection.x >0 && projection.y < WindH && projection.y >0){
+            projection.x = projection.x+norm.x;
+            projection.y = projection.y+norm.y;
+        }
+        cout<<" projection:"<<projection.x<<" "<<projection.y
+           <<" norm:"<<norm.x<<" "<<norm.y<<" Souris:"
+           <<souris.x<<" "<<souris.y<<endl;
 
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
         if (j==1){
-            Portail_bleu.set_portal_position(souris);
+            Portail_bleu.set_portal_position(projection);
         }
         if (j==3){
-            Portail_rouge.set_portal_position(souris);
+            Portail_rouge.set_portal_position(projection);
         }
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();

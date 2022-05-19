@@ -6,7 +6,7 @@ void mouse(point& p, int& j);
 
 class Portail {
     int h_portail=100;
-    int w_portail=5;
+    int w_portail=10;
     point position_portail={0,0};
 
     Color col;

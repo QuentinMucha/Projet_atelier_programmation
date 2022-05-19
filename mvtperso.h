@@ -16,6 +16,8 @@ struct point {
     int y;
 };
 
+void Vecteur_norme(point p, point& N);
+
 void keyboard(point& p, int& a, int& j);
 
 class Personnage{
