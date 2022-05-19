@@ -7,16 +7,16 @@
 #include <Imagine/Graphics.h>
 #include <string>
 using namespace Imagine;
+using namespace std;
 
 
-
-int keyboard();
 
 struct point {
     int x;
     int y;
 };
 
+void keyboard(point& p, int& a, int& j);
 
 class Personnage{
     point position;

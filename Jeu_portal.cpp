@@ -1,7 +1,7 @@
 
 #include "mvtperso.h"
 #include "Plateformes.h"
-
+#include "Portail.h"
 
 //on code le personnage depuis le coin haut gauche
 

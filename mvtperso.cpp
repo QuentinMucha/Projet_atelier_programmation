@@ -1,15 +1,22 @@
 #include "mvtperso.h"
 #include "Plateformes.h"
+#include "Portail.h"
 
 
-int keyboard() {
+void keyboard(point& p, int& a, int& j) {
     Event e;
+    a=0;
+    j=0;
     do {
         getEvent(0,e);
         if(e.type==EVT_KEY_ON)
-            return e.key;
+            a =  e.key;
+        if(e.type==EVT_BUT_ON){
+            p.x = e.pix.x();
+            p.y = e.pix.y();
+            j=e.button;
+        }
     } while(e.type!=EVT_NONE);
-    return 0;
 }
 
 //constructeur
@@ -137,24 +144,54 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     Personnage Perso(3*w/4, h/2);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
-    int a=0;
+
+    int a=0; //variable liée au keybord
+    int j=0; //variable liée à la souris
     bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
     int dt =1;
+
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
     plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
-    while(true){
+//<<<<<<< HEAD
+//    while(true){
         
-        fillRect(P.x,P.y,W1+1,H1,WHITE);//efface ancienne position
-        a=keyboard();
+//        fillRect(P.x,P.y,W1+1,H1,WHITE);//efface ancienne position
+//        a=keyboard();
+//        Perso.modif_vitesse(a,Au_Sol);
+//        Naturel(Perso,Au_Sol,dt);
+
+
+//        P=Perso.get_position();
+//=======
+    Portail Portail_rouge(RED);
+    Portail Portail_bleu(BLUE);
+    point souris={-1000,-1000};
+
+    while(true){
+
+        Portail_bleu.erase_portal();
+        Portail_rouge.erase_portal();
+        if (j==1){
+            Portail_bleu.set_portal_position(souris);
+        }
+        if (j==3){
+            Portail_rouge.set_portal_position(souris);
+        }
+        Portail_bleu.Draw_portal();
+        Portail_rouge.Draw_portal();
+
+        fillRect(P.x,P.y,W1+1,H1,WHITE);
+        keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
         Naturel(Perso,Au_Sol,dt);
+        P =Perso.get_position();
 
 
-        P=Perso.get_position();
         Perso.affiche_perso(I,a);
+
         milliSleep(dt);
         
         //affichage numero plateforme pour debuggage
@@ -171,11 +208,6 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
         bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
-//        if(etat_collisions[0]){ //si le hero se prend le plafond
-//            Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
-//            Au_Sol=true;
-//            Niveau1_sol.draw(2);
-//        }
 
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
