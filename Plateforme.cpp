@@ -49,7 +49,7 @@ Segment_plateforme* plafond_segments_niveau_1(){
 bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_Plat)==Longueur
     bool* Resultat=new bool[Longueur-1];
     for(int i=0;i<Longueur-1;i++){
-        if(Seg_plat[i].extremite_D==Seg_plat[i].extremite_G)
+        if(Seg_plat[i].extremite_D==Seg_plat[i+1].extremite_G)
             Resultat[i]=true;
         else
             Resultat[i]=false;
@@ -58,10 +58,12 @@ bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_
 }
 
 
-int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur){
-    int Moitie_droite=X_personnage+ventre/2;
-    int Moitie_gauche=X_personnage-ventre/2;
+int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
     for(int i=0;i<Longueur;i++){
+        int pied_perso=Y_personnage+taille;
+        int cote_gauche=X_personnage;
+        int cote_droit=X_personnage+ventre;
+//        if(pied_perso>)
         if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
         }
@@ -73,49 +75,59 @@ int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_pl
 bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero){
     int NbrSols=ASols.nombre_segment;
     Segment_plateforme* Sols=ASols.Liste_Segment;
-    int NbrPlafonds=APlafonds.nombre_segment;
+//    int NbrPlafonds=APlafonds.nombre_segment;
     Segment_plateforme* Plafonds=APlafonds.Liste_Segment;
 
-    int plate_hero=plateforme_personnage(X_hero,Ventre_hero,Sols,NbrSols);
-    bool* Resultatt=new bool[3];  //(X,Y)
-    Resultatt[0]=false;//collision droite ou gauche
+    int plate_hero=plateforme_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols);
+    bool* Resultatt=new bool[4];  //(X,Y)
+    int pied_hero=Y_hero+Taille_hero;
+    int cote_droit_hero=X_hero+Ventre_hero;
+    int cote_gauche_hero=X_hero;
+    bool* liste_murs=Presence_mur(Sols,NbrSols);
+    Resultatt[3]=false;//collision droite
+    Resultatt[2]=false;//collision gauche
     Resultatt[1]=false;//collision sol
-    Resultatt[2]=false;//collision plafond
+    Resultatt[0]=false;//collision plafond
     assert(plate_hero>-1);
-    if((Y_hero+Taille_hero)>=Sols[plate_hero].altitude){ //si en dessous du sol
+    if((pied_hero)>=Sols[plate_hero].altitude){ //si en dessous du sol
         Resultatt[1]=true;
     }
 
     if(plate_hero==0){ //si a gauche de l'ecran
-        if(X_hero<=Sols[plate_hero].extremite_G){ //si on sort de l'image a gauche
-            Resultatt[0]=true;
+        if(cote_gauche_hero<=Sols[plate_hero].extremite_G){ //si on sort de l'image a gauche
+            Resultatt[2]=true;
         }
     }
+
     if(plate_hero==NbrSols-1){ //si a droite de l'ecran
-        if(X_hero>=Sols[plate_hero].extremite_D-Ventre_hero){ //si on sort de l'image a gauche
-            Resultatt[0]=true;
+        if(cote_droit_hero>=Sols[plate_hero].extremite_D){ //si on sort de l'image a droite
+            Resultatt[3]=true;
         }
     }
+
     if((plate_hero!=NbrSols-1)){//si pas a droite
-        if(((Y_hero+Taille_hero)<Sols[plate_hero+1].altitude)){ //si suceptible de se prendre le mur
-            if(Presence_mur(Sols,NbrSols)[plate_hero]){//si presence mur entre plate_hero et plate_hero+1
-                if((X_hero+Ventre_hero)>Sols[plate_hero].extremite_D){//si le personnage est dans le mur;
-                    Resultatt[0]=true;
+        if(pied_hero>Sols[plate_hero+1].altitude){ //si suceptible de se prendre le mur
+           if(liste_murs[plate_hero]){//si presence mur entre plate_hero et plate_hero+1
+                if((cote_droit_hero)>Sols[plate_hero].extremite_D){//si le personnage est dans le mur;
+                    Resultatt[3]=true;
                 }
             }
         }
     }
+
     if((plate_hero!=0)){//si pas a gauche
-        if(((Y_hero+Taille_hero)<Sols[plate_hero-1].altitude)){ //si suceptible de se prendre le mur
-            if(Presence_mur(Sols,NbrSols)[plate_hero-1]){//si presence mur entre plate_hero et plate_hero-11
-                if((X_hero+Ventre_hero)>Sols[plate_hero].extremite_G){//si le personnage est dans le mur;
-                    Resultatt[0]=true;
+        if((pied_hero)>Sols[plate_hero-1].altitude){ //si suceptible de se prendre le mur
+            if(liste_murs[plate_hero-1]){//si presence mur entre plate_hero et plate_hero-1
+                if(cote_gauche_hero<Sols[plate_hero].extremite_G){//si le personnage est dans le mur;
+                    Resultatt[2]=true;
                 }
             }
         }
     }
+
     if((Y_hero)<=Plafonds[plate_hero].altitude) //si au dessus du plafond
-        Resultatt[2]=true;
+        Resultatt[0]=true;
+    delete[] liste_murs;
     //il est encore necessaire de faire les collisions au plafond
     return Resultatt;
 }

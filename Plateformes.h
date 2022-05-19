@@ -29,5 +29,5 @@ public:
 
 Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero);
 Segment_plateforme* plafond_segments_niveau_1();
-int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur); //ventre est l'epaisseur du personnage
+int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur); //ventre est l'epaisseur du personnage
 bool* Collisions(plateforme ASols, plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero);

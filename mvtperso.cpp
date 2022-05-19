@@ -53,7 +53,7 @@ void Personnage::modif_vitesse(int a, bool &Au_sol){ // a variable retournée pa
             Au_sol=false;
         }
     }
-
+    
 }
 
 //causes naturelles
@@ -82,7 +82,7 @@ void Personnage::frein(bool Au_sol){
             vitesse.x=vitesse.x+1;
         }
     }
-
+    
     //    if(b){ //si on est au sol il faut freiner aussi
     //        if (vitesse.x>0){
     //            vitesse.x=vitesse.x-1;
@@ -102,17 +102,17 @@ void Naturel(Personnage& Perso,bool b,int dt){
 //affichage
 void Personnage::affiche_perso(NativeBitmap I[6], int a){
     //Déplacement à gauche
-
+    
     if (a==16777234){
         dir =1;
         putNativeBitmap(position.x,position.y,I[3]);
-
+        
     }
     //Déplacement à droite
     else if (a==16777236){
         dir =0;
         putNativeBitmap(position.x,position.y,I[2]);
-
+        
     }
     else{
         if (dir == 1){
@@ -125,19 +125,16 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 }
 
 
-//reactiver gravite quand on quitte plateforme
+//void Personnage::efface_perso(int W1,int H1){
 
-
-void Personnage::efface_perso(int W1,int H1){
-
-    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
-}
+//    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
+//}
 
 //jeu
 
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
-
-    Personnage Perso(w/4, h/2);
+    
+    Personnage Perso(3*w/4, h/2);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
     int a=0;
@@ -147,38 +144,66 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
+
     while(true){
-
-        fillRect(P.x,P.y,W1+1,H1,WHITE);
-
+        
+        fillRect(P.x,P.y,W1+1,H1,WHITE);//efface ancienne position
         a=keyboard();
         Perso.modif_vitesse(a,Au_Sol);
         Naturel(Perso,Au_Sol,dt);
-        P =Perso.get_position();
 
 
+        P=Perso.get_position();
         Perso.affiche_perso(I,a);
         milliSleep(dt);
-
-        //affichage numero plateforme
-        drawString(WindW-200,20,std::to_string(plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)),RED);
+        
+        //affichage numero plateforme pour debuggage
+        int numero_plateforme_du_perso=plateforme_personnage(P.x,P.y,W1,H1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
+        drawString(WindW-200,20,std::to_string(numero_plateforme_du_perso),RED);
         milliSleep(10);
         fillRect(WindW-200,0,200,20,WHITE);
-        if(plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)==-1){
+        if(numero_plateforme_du_perso==-1){
             drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
         }
         //fin affichage
 
-        Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment)];
+        //sequence collision
+        Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
+        bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
-        if(Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1)[1]){ //si le hero a les pied sur le sol
+//        if(etat_collisions[0]){ //si le hero se prend le plafond
+//            Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
+//            Au_Sol=true;
+//            Niveau1_sol.draw(2);
+//        }
+
+        if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
             Niveau1_sol.draw(2);
         }
 
+        if(etat_collisions[1]){ //si le hero a les pieds sur le sol
+            Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
+            Au_Sol=true;
+            Niveau1_sol.draw(2);
+        }
+
+        if(!etat_collisions[1]){ //si le hero a les pieds pas sur la plateforme
+            Au_Sol=false;
+            Niveau1_sol.draw(2);
+        }
+
         if(NotrePlateforme.Vide){ //si c'est vide en dessous
-           Au_Sol=false;
+            Au_Sol=false;
+        }
+
+        if(etat_collisions[2]){//si on se prend un mur a gauche
+            Perso.Change_coord_perso(NotrePlateforme.extremite_G,P.y);
+        }
+
+        if(etat_collisions[3]){//si on se prend un mur a droite
+            Perso.Change_coord_perso(NotrePlateforme.extremite_D-W1,P.y);
         }
 
     }
