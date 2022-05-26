@@ -36,6 +36,10 @@ point Personnage::get_position(){
     return position;
 }
 
+int Personnage::get_dir(){
+    return dir;
+}
+
 point Personnage::get_speed(){
     return vitesse;
 }
@@ -118,13 +122,13 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
     if (a==16777234){
         dir =1;
         putNativeBitmap(position.x,position.y,I[3]);
-        
+
     }
     //Déplacement à droite
     else if (a==16777236){
         dir =0;
         putNativeBitmap(position.x,position.y,I[2]);
-        
+
     }
     else{
         if (dir == 1){
@@ -142,10 +146,13 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 //    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
 //}
 
+
 //jeu
 
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     
+
+    // Définition du personnage
     Personnage Perso(3*w/4, h/2);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
@@ -153,23 +160,27 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     int a=0; //variable liée au keybord
     int j=0; //variable liée à la souris
     bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
-    int dt =1;
+    int dt =1; // pas de temps
 
+    // Définition des plateformes
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
     plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
+    // Définition des portails
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={-1000,-1000};
 
+    //variables utiles pour la gestion des portails
     point vecteur={0,0};
     point norm={0,0};
     point projection={0,0};
 
     while(true){
 
+        //Gestion des portails
         vecteur.x = souris.x -P.x;
         vecteur.y = souris.y -P.y;
         Vecteur_norme(vecteur,norm);
@@ -179,10 +190,10 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
             projection.x = projection.x+norm.x;
             projection.y = projection.y+norm.y;
         }
-        cout<<" projection:"<<projection.x<<" "<<projection.y
-           <<" norm:"<<norm.x<<" "<<norm.y<<" Souris:"
-           <<souris.x<<" "<<souris.y<<endl;
 
+
+
+        //affichage des portails
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
         if (j==1){
@@ -194,12 +205,17 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();
 
+        //Téléportation
+        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol);
+
+
+
+        //affichage du personnage
         fillRect(P.x,P.y,W1+1,H1,WHITE);
         keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
         Naturel(Perso,Au_Sol,dt);
         P =Perso.get_position();
-
 
         Perso.affiche_perso(I,a);
 

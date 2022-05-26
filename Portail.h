@@ -13,6 +13,7 @@ class Portail {
 public:
     Portail(Color color);
     point get_portal_position();
+    void get_portal_w_h(int &w, int &h);
     void set_portal_position(point p);
     void Draw_portal();
     void erase_portal();
@@ -20,3 +21,5 @@ public:
 
 
 };
+
+void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, bool &Au_sol);
