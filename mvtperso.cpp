@@ -160,6 +160,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
+
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={-1000,-1000};
@@ -219,6 +220,10 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
         bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
+//        if(etat_collisions[0]){ //si le hero se prend le plafond
+//            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
+////            Niveau1_plafond.draw(2);
+//        }
 
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
