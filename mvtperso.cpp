@@ -3,8 +3,8 @@
 #include "Portail.h"
 
 void Vecteur_norme(point p, point& N){
-    N.x =2*1/sqrt(p.x*p.x+p.y*p.y) * p.x;
-    N.y =2*1/sqrt(p.x*p.x+p.y*p.y) * p.y;
+    N.x =5*1/sqrt(p.x*p.x+p.y*p.y) * p.x;
+    N.y =5*1/sqrt(p.x*p.x+p.y*p.y) * p.y;
 
 }
 
@@ -188,14 +188,15 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         vecteur.x = souris.x -P.x;
         vecteur.y = souris.y -P.y;
         Vecteur_norme(vecteur,norm);
-        projection=souris;
+        projection=P;
 
         while (projection.x < WindW && projection.x >0 && projection.y < WindH && projection.y >0){
             projection.x = projection.x+norm.x;
             projection.y = projection.y+norm.y;
         }
-
-
+        cout<<"projection x="<<projection.x<<" y="<<projection.y<<endl;
+        cout<<"souris x="<<souris.x<<" y="<<souris.y<<endl;
+        cout<<"norm x="<<norm.x<<" y="<<norm.y<<endl;
 
         //affichage des portails
         Portail_bleu.erase_portal();

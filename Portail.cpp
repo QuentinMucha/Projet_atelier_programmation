@@ -63,7 +63,7 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
     if (dir==1){ //0 : orientation du perso vers la droite; 1 : orientation du perso vers la gauche
         if (x<=xP+wP/2 && x>xP-wP/2 && y>yP-hP/2 && y<yP+hP/2){
             Au_sol=false;
-            cout<<"xp2 "<<xP2<<endl;
+
             if (xP2>=WindW){
                 Perso.Change_coord_perso(xP2-W,yP2);
                 Perso.Change_vitesse_perso(-5,0);
