@@ -217,7 +217,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Portail_rouge.Draw_portal();
 
         //Téléportation
-        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol);
+        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
 
 
 

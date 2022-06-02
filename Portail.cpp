@@ -28,7 +28,7 @@ void Portail::erase_portal(){
    fillRect(position_portail.x-w_portail/2,position_portail.y-h_portail/2,w_portail,h_portail,WHITE);
 }
 
-void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, bool &Au_sol){
+void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, bool &Au_sol, plateforme ASols,plateforme APlafonds){
     int x=Perso.get_position().x;
     int y=Perso.get_position().y;
     int dir=Perso.get_dir();
@@ -43,15 +43,27 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
     Port1.get_portal_w_h(wP,hP);
     int vx=Perso.get_speed().x;
 
-    if (dir==0){
+    bool* Collision=Collisions(ASols,APlafonds,xP2,yP2,5,5);
+//    Resultatt[3]=false;//collision droite
+//    Resultatt[2]=false;//collision gauche
+//    Resultatt[1]=false;//collision sol
+//    Resultatt[0]=false;//collision plafond
+    if (Collision[2]){
+        cout<<"collision gauche "<<endl;
+     }
+    if (Collision[3]){
+        cout<<"collision droite "<<endl;
+     }
+
+    if (dir==0){//0 : orientation du perso vers la droite; 1 : orientation du perso vers la gauche
         if (x+W>=xP-wP/2 && x+W<xP+wP/2 && y>yP-hP/2 && y<yP+hP/2){
             Au_sol=false;
-            if (xP2>=WindW){
+            if (Collision[3]){
                 Perso.Change_vitesse_perso(-vx-5,0);
                 Perso.modif_dir(1);
                 Perso.Change_coord_perso(xP2-W,yP2);
             }
-            else if (xP2<=0){
+            else if (Collision[2]){
                 Perso.Change_vitesse_perso(vx+5,0);
                 Perso.Change_coord_perso(xP2+W,yP2);
             }
@@ -65,12 +77,13 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
         if (x<=xP+wP/2 && x>xP-wP/2 && y>yP-hP/2 && y<yP+hP/2){
             Au_sol=false;
 
-            if (xP2>=WindW){
+
+            if (Collision[3]){
                 Perso.Change_coord_perso(xP2-W,yP2);
-                Perso.Change_vitesse_perso(-5,0);
+                Perso.Change_vitesse_perso(vx-5,0);
 
             }
-            else if (xP2<=0){
+            else if (Collision[2]){
                 Perso.Change_coord_perso(xP2+W,yP2);
                 Perso.modif_dir(0);
                 Perso.Change_vitesse_perso(-vx+5,0);
