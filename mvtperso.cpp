@@ -51,6 +51,10 @@ point Personnage::get_speed(){
 
 //modifier a la main
 
+void Personnage::modif_dir(int b){
+  dir=b;
+}
+
 void Personnage::Change_vitesse_perso(int vx,int vy){
     vitesse={vx,vy};
 }

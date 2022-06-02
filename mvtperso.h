@@ -34,6 +34,7 @@ public:
     point get_position();
     int get_dir();
     void gravite(bool b,int dt);
+    void modif_dir(int b);
     void modif_vitesse(int a, bool& b);
     void mouvement(int dt);
     void frein(bool b);
