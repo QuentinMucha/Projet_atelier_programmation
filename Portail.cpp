@@ -46,9 +46,8 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
         if (x+W>=xP-wP/2 && x+W<xP+wP/2 && y>yP-hP/2 && y<yP+hP/2){
             Au_sol=false;
             if (xP2>=WindW){
-
                 Perso.Change_vitesse_perso(-vx-5,0);
-                dir=1;
+                Perso.modif_dir(1);
                 Perso.Change_coord_perso(xP2-W,yP2);
             }
             else if (xP2<=0){
@@ -72,7 +71,7 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
             }
             else if (xP2<=0){
                 Perso.Change_coord_perso(xP2+W,yP2);
-                dir=0;
+                Perso.modif_dir(0);
                 Perso.Change_vitesse_perso(-vx+5,0);
             }
             else {
