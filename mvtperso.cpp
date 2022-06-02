@@ -4,8 +4,13 @@
 
 void Vecteur_norme(point p, point& N){
     N.x =2*1/sqrt(p.x*p.x+p.y*p.y) * p.x;
-    N.y =2*1/sqrt(p.x*p.x+p.y*p.y) * p.y;
+    N.y =2*1/sqrt(p.x*p.x+p.y*p.y) * p.y;//pk 2*1/sqrt
 
+}
+void Vecteur_norme(point p, point_double& N){
+    N.x=p.x*1/sqrt(p.x*p.x+p.y*p.y);
+    N.y=p.y*1/sqrt(p.x*p.x+p.y*p.y);
+//    cout<<N.x<<" "<<N.y<<" ";
 }
 
 void keyboard(point& p, int& a, int& j) {
@@ -34,6 +39,10 @@ Personnage::Personnage(int x, int y){
 
 point Personnage::get_position(){
     return position;
+}
+
+int Personnage::get_dir(){
+    return dir;
 }
 
 point Personnage::get_speed(){
@@ -94,15 +103,6 @@ void Personnage::frein(bool Au_sol){
             vitesse.x=vitesse.x+1;
         }
     }
-    
-    //    if(b){ //si on est au sol il faut freiner aussi
-    //        if (vitesse.x>0){
-    //            vitesse.x=vitesse.x-1;
-    //        }
-    //        if(vitesse.x<0){
-    //            vitesse.x=vitesse.x+1;
-    //        }
-    //    }
 }
 
 void Naturel(Personnage& Perso,bool b,int dt){
@@ -118,13 +118,13 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
     if (a==16777234){
         dir =1;
         putNativeBitmap(position.x,position.y,I[3]);
-        
+
     }
     //Déplacement à droite
     else if (a==16777236){
         dir =0;
         putNativeBitmap(position.x,position.y,I[2]);
-        
+
     }
     else{
         if (dir == 1){
@@ -142,48 +142,62 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 //    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
 //}
 
+
 //jeu
 
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     
-    Personnage Perso(3*w/4, h/2);
+
+    // Définition du personnage
+    Personnage Perso(3*w/4, h/2+100);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
 
     int a=0; //variable liée au keybord
     int j=0; //variable liée à la souris
     bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
-    int dt =1;
+    int dt =1; // pas de temps
 
+    // Définition des plateformes
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
     plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
 
+    // Définition des portails
+
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={-1000,-1000};
 
-    point vecteur={0,0};
-    point norm={0,0};
-    point projection={0,0};
+    //variables utiles pour la gestion des portails
+//    point vecteur={0,0};
+//    point norm={0,0};
+//    point projection={0,0};
 
     while(true){
 
-        vecteur.x = souris.x -P.x;
-        vecteur.y = souris.y -P.y;
-        Vecteur_norme(vecteur,norm);
-        projection=souris;
+//        //Gestion des portails
+//        vecteur.x = souris.x -P.x;
+//        vecteur.y = souris.y -P.y;
+//        Vecteur_norme(vecteur,norm);
+//        projection=souris;
+//        bool* COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+//        bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+//        while (rien_touche){
+//            projection.x = projection.x+norm.x;
+//            projection.y = projection.y+norm.y;
+//            cout<<projection.x<<" "<<projection.y<<" ";
+//            COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+//            rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+//        }
 
-        while (projection.x < WindW && projection.x >0 && projection.y < WindH && projection.y >0){
-            projection.x = projection.x+norm.x;
-            projection.y = projection.y+norm.y;
-        }
-        cout<<" projection:"<<projection.x<<" "<<projection.y
-           <<" norm:"<<norm.x<<" "<<norm.y<<" Souris:"
-           <<souris.x<<" "<<souris.y<<endl;
 
+        bool portail_horizontal=false;
+        point projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+
+        //affichage des portails
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
         if (j==1){
@@ -195,12 +209,17 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();
 
+        //Téléportation
+        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol);
+
+
+
+        //affichage du personnage
         fillRect(P.x,P.y,W1+1,H1,WHITE);
         keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
         Naturel(Perso,Au_Sol,dt);
         P =Perso.get_position();
-
 
         Perso.affiche_perso(I,a);
 
@@ -222,9 +241,9 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
 //        if(etat_collisions[0]){ //si le hero se prend le plafond
 //            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
-////            Niveau1_plafond.draw(2);
+
 //        }
-
+        Niveau1_plafond.draw(1);
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
@@ -237,7 +256,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
             Niveau1_sol.draw(2);
         }
 
-        if(!etat_collisions[1]){ //si le hero a les pieds pas sur la plateforme
+        if(!etat_collisions[1]){ //si le hero n'a pas les pieds sur la plateforme
             Au_Sol=false;
             Niveau1_sol.draw(2);
         }
