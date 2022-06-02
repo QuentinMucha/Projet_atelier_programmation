@@ -2,6 +2,7 @@
 #include "Portail.h"
 #include "Plateformes.h"
 
+
 Portail::Portail(Color color){
    col=color;
 }
@@ -83,3 +84,36 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
 
 
 }
+
+point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Taille_hero,int Ventre_hero,bool& portail_horizontale){ //cette fonction va renvoyer la collision entre le tir et l'obstacle
+
+    point_double norme={0.,0.};
+    point Vecteur_hero_to_clique={ point_vise.x -(X_hero+Ventre_hero/2),point_vise.y -(Y_hero-Taille_hero/2)};
+    Vecteur_norme(Vecteur_hero_to_clique,norme);
+    point projection={X_hero+Ventre_hero/2,Y_hero-Taille_hero/2};
+    point pt_base=projection;
+    int i=0;
+
+    bool* COLLISIONS= Collisions(ASols,APlafonds,projection,1,1);
+    bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+    while (rien_touche){
+        projection.x = pt_base.x+i*norme.x;
+        projection.y = pt_base.y+i*norme.y;
+
+        COLLISIONS= Collisions(ASols,APlafonds,projection,2,2);
+        rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+        i=i+1;
+    }
+    if(COLLISIONS[0]){ //si collision au plafond
+        portail_horizontale=true;
+    }
+    if(COLLISIONS[1]){//si collision au sol
+        portail_horizontale=true;
+    }
+    return projection;
+}
+
+
+    //keyboard(souris,a,j);
+
+

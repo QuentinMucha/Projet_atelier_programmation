@@ -59,23 +59,38 @@ bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_
 
 
 int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
+    int pied_perso=Y_personnage+taille;
+    int cote_gauche=X_personnage;
+    int cote_droit=X_personnage+ventre;
+    int NbrSols=Longueur;
     for(int i=0;i<Longueur;i++){
-        int pied_perso=Y_personnage+taille;
-        int cote_gauche=X_personnage;
-        int cote_droit=X_personnage+ventre;
-//        if(pied_perso>)
+
         if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
         }
     }
-    std::cout<<"plateforme -1";
+
+    return -1;
+}
+int plafond_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
+    int pied_perso=Y_personnage+taille;
+    int cote_gauche=X_personnage;
+    int cote_droit=X_personnage+ventre;
+    int NbrSols=Longueur;
+    for(int i=0;i<Longueur;i++){
+
+        if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
+            return i;
+        }
+    }
+
     return -1;
 }
 
 bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero){
     int NbrSols=ASols.nombre_segment;
     Segment_plateforme* Sols=ASols.Liste_Segment;
-//    int NbrPlafonds=APlafonds.nombre_segment;
+    //    int NbrPlafonds=APlafonds.nombre_segment;
     Segment_plateforme* Plafonds=APlafonds.Liste_Segment;
 
     int plate_hero=plateforme_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols);
@@ -88,7 +103,7 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
     Resultatt[2]=false;//collision gauche
     Resultatt[1]=false;//collision sol
     Resultatt[0]=false;//collision plafond
-    assert(plate_hero>-1);
+
     if((pied_hero)>=Sols[plate_hero].altitude){ //si en dessous du sol
         Resultatt[1]=true;
     }
@@ -107,7 +122,7 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
 
     if((plate_hero!=NbrSols-1)){//si pas a droite
         if(pied_hero>Sols[plate_hero+1].altitude){ //si suceptible de se prendre le mur
-           if(liste_murs[plate_hero]){//si presence mur entre plate_hero et plate_hero+1
+            if(liste_murs[plate_hero]){//si presence mur entre plate_hero et plate_hero+1
                 if((cote_droit_hero)>Sols[plate_hero].extremite_D){//si le personnage est dans le mur;
                     Resultatt[3]=true;
                 }
@@ -125,7 +140,7 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
         }
     }
 
-    if((Y_hero)<=Plafonds[plate_hero].altitude) //si au dessus du plafond
+    if((Y_hero)<=Plafonds[plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols)].altitude) //si au dessus du plafond
         Resultatt[0]=true;
     delete[] liste_murs;
     //il est encore necessaire de faire les collisions au plafond
@@ -136,5 +151,9 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
 
 
 
+bool* Collisions(plateforme ASols,plateforme APlafonds,point coord_hero,int Ventre_hero,int Taille_hero){
+
+    return Collisions(ASols,APlafonds,coord_hero.x,coord_hero.y,Ventre_hero,Taille_hero);
+}
 
 

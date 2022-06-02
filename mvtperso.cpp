@@ -8,6 +8,12 @@ void Vecteur_norme(point p, point& N){
 
 }
 
+void Vecteur_norme(point p, point_double& N){
+    N.x=p.x*1/sqrt(p.x*p.x+p.y*p.y);
+    N.y=p.y*1/sqrt(p.x*p.x+p.y*p.y);
+//    cout<<N.x<<" "<<N.y<<" ";
+}
+
 void keyboard(point& p, int& a, int& j) {
     Event e;
     a=0;
@@ -102,15 +108,6 @@ void Personnage::frein(bool Au_sol){
             vitesse.x=vitesse.x+1;
         }
     }
-    
-    //    if(b){ //si on est au sol il faut freiner aussi
-    //        if (vitesse.x>0){
-    //            vitesse.x=vitesse.x-1;
-    //        }
-    //        if(vitesse.x<0){
-    //            vitesse.x=vitesse.x+1;
-    //        }
-    //    }
 }
 
 void Naturel(Personnage& Perso,bool b,int dt){
@@ -157,7 +154,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     
 
     // Définition du personnage
-    Personnage Perso(3*w/4, h/2);
+    Personnage Perso(3*w/4, h/2+100);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
 
@@ -172,31 +169,40 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
+
     // Définition des portails
+
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={-1000,-1000};
 
     //variables utiles pour la gestion des portails
-    point vecteur={0,0};
-    point norm={0,0};
-    point projection={0,0};
+//    point vecteur={0,0};
+//    point norm={0,0};
+//    point projection={0,0};
 
     while(true){
 
-        //Gestion des portails
-        vecteur.x = souris.x -P.x;
-        vecteur.y = souris.y -P.y;
-        Vecteur_norme(vecteur,norm);
-        projection=P;
 
-        while (projection.x < WindW && projection.x >0 && projection.y < WindH && projection.y >0){
-            projection.x = projection.x+norm.x;
-            projection.y = projection.y+norm.y;
-        }
-        cout<<"projection x="<<projection.x<<" y="<<projection.y<<endl;
-        cout<<"souris x="<<souris.x<<" y="<<souris.y<<endl;
-        cout<<"norm x="<<norm.x<<" y="<<norm.y<<endl;
+//        //Gestion des portails
+//        vecteur.x = souris.x -P.x;
+//        vecteur.y = souris.y -P.y;
+//        Vecteur_norme(vecteur,norm);
+//        projection=souris;
+//        bool* COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+//        bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+//        while (rien_touche){
+//            projection.x = projection.x+norm.x;
+//            projection.y = projection.y+norm.y;
+//            cout<<projection.x<<" "<<projection.y<<" ";
+//            COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+//            rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+//        }
+
+
+        bool portail_horizontal=false;
+        point projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+
 
         //affichage des portails
         Portail_bleu.erase_portal();
@@ -240,7 +246,11 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
         bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
+//        if(etat_collisions[0]){ //si le hero se prend le plafond
+//            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
 
+//        }
+        Niveau1_plafond.draw(1);
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
@@ -253,7 +263,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
             Niveau1_sol.draw(2);
         }
 
-        if(!etat_collisions[1]){ //si le hero a les pieds pas sur la plateforme
+        if(!etat_collisions[1]){ //si le hero n'a pas les pieds sur la plateforme
             Au_Sol=false;
             Niveau1_sol.draw(2);
         }

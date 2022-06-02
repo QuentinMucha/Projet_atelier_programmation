@@ -14,8 +14,13 @@ struct point {
     int x;
     int y;
 };
+struct point_double {
+    double x;
+    double y;
+};
 
 void Vecteur_norme(point p, point& N);
+void Vecteur_norme(point p, point_double& N);
 
 void keyboard(point& p, int& a, int& j);
 
