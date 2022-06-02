@@ -59,19 +59,14 @@ bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_
 
 
 int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
-    int pied_perso=Y_personnage+taille;
-    int cote_gauche=X_personnage;
-    int cote_droit=X_personnage+ventre;
-    int NbrSols=Longueur;
     for(int i=0;i<Longueur;i++){
-
         if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
         }
     }
-
     return -1;
 }
+
 int plafond_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
     int pied_perso=Y_personnage+taille;
     int cote_gauche=X_personnage;
@@ -140,8 +135,8 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
         }
     }
 
-    if((Y_hero)<=Plafonds[plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols)].altitude) //si au dessus du plafond
-        Resultatt[0]=true;
+    if((Y_hero)<=Plafonds[plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols)].altitude){ //si au dessus du plafond
+        Resultatt[0]=true;}
     delete[] liste_murs;
     //il est encore necessaire de faire les collisions au plafond
     return Resultatt;
