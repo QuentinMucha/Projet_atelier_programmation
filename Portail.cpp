@@ -90,19 +90,24 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
     point_double norme={0.,0.};
     point Vecteur_hero_to_clique={ point_vise.x -(X_hero+Ventre_hero/2),point_vise.y -(Y_hero-Taille_hero/2)};
     Vecteur_norme(Vecteur_hero_to_clique,norme);
-    point projection={X_hero+Ventre_hero/2,Y_hero-Taille_hero/2};
+    point projection={X_hero+Ventre_hero/2,Y_hero+Taille_hero/2};
     point pt_base=projection;
     int i=0;
-
-    bool* COLLISIONS= Collisions(ASols,APlafonds,projection,1,1);
+    int a,b;
+    bool* COLLISIONS= Collisions(ASols,APlafonds,projection,0,0);
     bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
     while (rien_touche){
+        fillRect(projection.x,projection.y,2,2,RED);
+        a=projection.x;
+        b=projection.y;
+
         projection.x = pt_base.x+i*norme.x;
         projection.y = pt_base.y+i*norme.y;
 
         COLLISIONS= Collisions(ASols,APlafonds,projection,2,2);
         rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
         i=i+1;
+//        fillRect(a,b,2,2,WHITE);
     }
     if(COLLISIONS[0]){ //si collision au plafond
         portail_horizontale=true;
@@ -110,6 +115,7 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
     if(COLLISIONS[1]){//si collision au sol
         portail_horizontale=true;
     }
+
     return projection;
 }
 

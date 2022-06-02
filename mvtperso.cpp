@@ -11,7 +11,7 @@ void Vecteur_norme(point p, point& N){
 void Vecteur_norme(point p, point_double& N){
     N.x=p.x*1/sqrt(p.x*p.x+p.y*p.y);
     N.y=p.y*1/sqrt(p.x*p.x+p.y*p.y);
-//    cout<<N.x<<" "<<N.y<<" ";
+    //    cout<<N.x<<" "<<N.y<<" ";
 }
 
 void keyboard(point& p, int& a, int& j) {
@@ -53,7 +53,7 @@ point Personnage::get_speed(){
 //modifier a la main
 
 void Personnage::modif_dir(int b){
-  dir=b;
+    dir=b;
 }
 
 void Personnage::Change_vitesse_perso(int vx,int vy){
@@ -177,31 +177,31 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     point souris={-1000,-1000};
 
     //variables utiles pour la gestion des portails
-//    point vecteur={0,0};
-//    point norm={0,0};
-//    point projection={0,0};
-
+    //    point vecteur={0,0};
+    //    point norm={0,0};
+    //    point projection={0,0};
+    point projection;
     while(true){
 
 
-//        //Gestion des portails
-//        vecteur.x = souris.x -P.x;
-//        vecteur.y = souris.y -P.y;
-//        Vecteur_norme(vecteur,norm);
-//        projection=souris;
-//        bool* COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
-//        bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
-//        while (rien_touche){
-//            projection.x = projection.x+norm.x;
-//            projection.y = projection.y+norm.y;
-//            cout<<projection.x<<" "<<projection.y<<" ";
-//            COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
-//            rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
-//        }
+        //        //Gestion des portails
+        //        vecteur.x = souris.x -P.x;
+        //        vecteur.y = souris.y -P.y;
+        //        Vecteur_norme(vecteur,norm);
+        //        projection=souris;
+        //        bool* COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+        //        bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+        //        while (rien_touche){
+        //            projection.x = projection.x+norm.x;
+        //            projection.y = projection.y+norm.y;
+        //            cout<<projection.x<<" "<<projection.y<<" ";
+        //            COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
+        //            rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+        //        }
 
 
         bool portail_horizontal=false;
-        point projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+        projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
 
 
         //affichage des portails
@@ -246,10 +246,10 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
         bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
-//        if(etat_collisions[0]){ //si le hero se prend le plafond
-//            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
+        //        if(etat_collisions[0]){ //si le hero se prend le plafond
+        //            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
 
-//        }
+        //        }
         Niveau1_plafond.draw(1);
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
