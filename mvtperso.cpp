@@ -174,34 +174,15 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
-    point souris={-1000,-1000};
-
-    //variables utiles pour la gestion des portails
-    //    point vecteur={0,0};
-    //    point norm={0,0};
-    //    point projection={0,0};
+    point souris={1000,500};
+    point souris2={1000,500};
     point projection;
     while(true){
 
-
-        //        //Gestion des portails
-        //        vecteur.x = souris.x -P.x;
-        //        vecteur.y = souris.y -P.y;
-        //        Vecteur_norme(vecteur,norm);
-        //        projection=souris;
-        //        bool* COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
-        //        bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
-        //        while (rien_touche){
-        //            projection.x = projection.x+norm.x;
-        //            projection.y = projection.y+norm.y;
-        //            cout<<projection.x<<" "<<projection.y<<" ";
-        //            COLLISIONS= Collisions(Niveau1_sol,Niveau1_plafond,projection,2,2);
-        //            rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
-        //        }
-
-
         bool portail_horizontal=false;
-        projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+        if((souris.x!=souris2.x)&&(souris.y!=souris2.y)){//si la position du clique change
+            projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+            souris2=souris;}
 
 
         //affichage des portails
