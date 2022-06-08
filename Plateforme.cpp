@@ -35,18 +35,23 @@ void plateforme::destructeur(){
 }
 
 Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero){
-    Segment_plateforme* Resultat=new Segment_plateforme[4];
+    int Longueur=4;
+    Segment_plateforme* Resultat=new Segment_plateforme[Longueur];
     Resultat[0]={0,WindW/2-2*Ventre_hero,9*WindH/10,9};
-    Resultat[1]={WindW/2-2*Ventre_hero,WindW/2+1*Ventre_hero,9*WindH/10-10,10,false};
-    Resultat[2]={WindW/2+1*Ventre_hero,WindW/2+5*Ventre_hero,9*WindH/10-Taille_hero,9};
+    Resultat[1]={WindW/2-2*Ventre_hero,WindW/2+2*Ventre_hero,9*WindH/10-10,10,true};
+    Resultat[2]={WindW/2+2*Ventre_hero,WindW/2+5*Ventre_hero,9*WindH/10-Taille_hero,9};
     Resultat[3]={WindW/2+5*Ventre_hero,WindW,9*WindH/10-2*Taille_hero,9};
+    for(int i=0;i<Longueur;i++){
+        if(Resultat[i].Vide){
+            Resultat[i].altitude=WindH+10;
+        }
+    }
     return Resultat;
 }
 
 Segment_plateforme* plafond_segments_niveau_1(){
-    Segment_plateforme* Resultat=new Segment_plateforme[2];
-    Resultat[0]={0,WindW/2,WindH/10,9};
-    Resultat[1]={WindW/2,WindW,2*WindH/10,9};
+    Segment_plateforme* Resultat=new Segment_plateforme[1];
+    Resultat[0]={0,WindW,WindH/10,9};
 
     return Resultat;
 }
@@ -135,7 +140,7 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
             }
         }
     }
-
+    plaf_perso=0;
     if((Y_hero)<=Plafonds[plaf_perso].altitude){ //si au dessus du plafond
         Resultatt[0]=true;}
     delete[] liste_murs;

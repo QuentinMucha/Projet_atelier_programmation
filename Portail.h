@@ -26,4 +26,4 @@ public:
 };
 
 void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, bool &Au_sol,plateforme ASols,plateforme APlafonds);
-point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Taille_hero,int Ventre_hero,bool& portail_horizontale);
+point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Taille_hero,int Ventre_hero,bool& portail_horizontale,int DIRECTION);

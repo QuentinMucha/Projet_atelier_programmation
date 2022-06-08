@@ -20,8 +20,10 @@ void keyboard(point& p, int& a, int& j) {
     j=0;
     do {
         getEvent(0,e);
-        if(e.type==EVT_KEY_ON)
+        if(e.type==EVT_KEY_ON){
             a =  e.key;
+
+        }
         if(e.type==EVT_BUT_ON){
             p.x = e.pix.x();
             p.y = e.pix.y();
@@ -142,6 +144,7 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 }
 
 
+
 //void Personnage::efface_perso(int W1,int H1){
 
 //    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
@@ -153,24 +156,24 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     
 
-    // Définition du personnage
+// Définition du personnage
     Personnage Perso(3*w/4, h/2+100);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
+    AlphaColor gris=AlphaColor(150,150,150,155);
 
     int a=0; //variable liée au keybord
     int j=0; //variable liée à la souris
     bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
     int dt =1; // pas de temps
 
-    // Définition des plateformes
+// Définition des plateformes
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
-    plateforme Niveau1_plafond=plateforme(2,plafond_segments_niveau_1());
+    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
-
-    // Définition des portails
+// Définition des portails
 
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
@@ -179,17 +182,34 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     point projection;
     while(true){
 
+//MENU PAUSE
+        if(a==16777216){
+            bool PAUSE=true;
+            a=-100000;
+            fillRect(0,0,WindW,WindH,gris);
+            while(PAUSE){
+                milliSleep(1);
+                keyboard(souris,a,j);
+
+                if(a==16777216){
+                    PAUSE=false;
+                    fillRect(0,0,WindW,WindH,WHITE);
+                }
+            }
+            a=-100000;
+        }
+//FIN MENU PAUSE
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
 
         bool portail_horizontal=false;
         if((souris.x!=souris2.x)&&(souris.y!=souris2.y)){//si la position du clique change
-            projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+            projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal,Perso.get_dir());
 
             souris2=souris;}
 
 
-        //affichage des portails
+//affichage des portails
 
         if (j==1){
             Portail_bleu.set_orientation(portail_horizontal);
@@ -202,12 +222,12 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();
 
-        //Téléportation
-        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
+//Téléportation
         teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
+        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
 
 
-        //affichage du personnage
+//affichage du personnage
         fillRect(P.x,P.y,W1+1,H1,WHITE);
         keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
@@ -218,11 +238,9 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
         milliSleep(dt);
         
-        //affichage numero plateforme pour debuggage
+//affichage numero plateforme pour debuggage
         int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
-        drawString(WindW-200,20,std::to_string(numero_plateforme_du_perso),RED);
         milliSleep(10);
-        fillRect(WindW-200,0,200,20,WHITE);
         if(numero_plateforme_du_perso==-1){
             drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
         }
@@ -232,10 +250,10 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
         bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
 
-        //        if(etat_collisions[0]){ //si le hero se prend le plafond
-        //            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
+        if(etat_collisions[0]){ //si le hero se prend le plafond
+            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
 
-        //        }
+        }
         Niveau1_plafond.draw(1);
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
