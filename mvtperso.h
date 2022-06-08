@@ -48,5 +48,5 @@ public:
 };
 
 
-void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]);
+void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau);
 int Norme(point P);

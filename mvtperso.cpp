@@ -169,8 +169,8 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 }
 
 
-void Zone_win(point position,int& Niveau,int Ventre_hero,int Taille_hero,int& a,point souris,int j){
-    if(Niveau==1){
+void Zone_win(point position,int Ventre_hero,int Taille_hero,int& a,point souris,int j,bool& finit){
+
         int Xvert_haut=WindW/2+7*Ventre_hero;
         int epaisseur=150;
         int Yvert_haut=9*WindH/10-5*Taille_hero;
@@ -187,13 +187,13 @@ void Zone_win(point position,int& Niveau,int Ventre_hero,int Taille_hero,int& a,
                 keyboard(souris,a,j);
                 if(a==16777220){
                     PAUSE=false;
-                    Niveau+=1;
+                    finit=true;
                 }
             }
             a=-100000;
         }
     }
-}
+
 
 
 void Personnage::Game_Over(int Wind,int H,int& a,point souris,int j,int Xdep,int Ydep){
@@ -220,13 +220,13 @@ void Personnage::Game_Over(int Wind,int H,int& a,point souris,int j,int Xdep,int
 
 //jeu
 
-void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
+
+void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau){
     
 
-// Définition du personnage
+    // Définition du personnage
     int X_dep=w/4;
     int Y_dep=h/2+100;
-    int Niveau=1;
     Personnage Perso(X_dep,Y_dep);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
@@ -236,46 +236,52 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     bool Au_Sol = false; // booléen : personnage sur une plateforme true ou non false
     int dt =1; // pas de temps
 
-// Définition des plateformes
-    plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
-    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
-    Niveau1_sol.draw(2);
-    Niveau1_plafond.draw(1);
+    // Définition des plateformes
 
-// Définition des portails
+    plateforme Niveau_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
+    plateforme Niveau_plafond=plateforme(1,plafond_segments_niveau_1());
+    if(Niveau==2){
+        Niveau_sol=plateforme(4,sol_segments_niveau_2(W1,H1));
+        Niveau_plafond=plateforme(1,plafond_segments_niveau_2());
+    }
+    Niveau_sol.draw(2);
+    Niveau_plafond.draw(1);
+
+    // Définition des portails
 
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
     point souris={WindW/2,WindH/2};
     point souris2={WindW/2,WindH/2};
     point projection;
-    while(true){
-    point V_anterieur=Perso.get_speed();
-//MENUS
-    Menu_Pause(a,souris,j);
-    Perso.Game_Over(WindH,H1,a,souris,j,X_dep,Y_dep);
-    Zone_win(Perso.get_position(),Niveau,W1,H1,a,souris,j);
-    if(a==114){
-        Perso.Change_coord_perso(X_dep,Y_dep);
-        Perso.Change_vitesse_perso(0,0);
-        Portail_bleu.erase_portal();
-        Portail_rouge.erase_portal();
-        Portail_bleu.set_portal_position({-1000,-1000});
-        Portail_rouge.set_portal_position({-1000,-1000});
-    }
+    bool finit=false;
+    while(!finit){
+        point V_anterieur=Perso.get_speed();
+        //MENUS
+        Menu_Pause(a,souris,j);
+        Perso.Game_Over(WindH,H1,a,souris,j,X_dep,Y_dep);
+        Zone_win(Perso.get_position(),W1,H1,a,souris,j,finit);
+        if(a==114){
+            Perso.Change_coord_perso(X_dep,Y_dep);
+            Perso.Change_vitesse_perso(0,0);
+            Portail_bleu.erase_portal();
+            Portail_rouge.erase_portal();
+            Portail_bleu.set_portal_position({-1000,-1000});
+            Portail_rouge.set_portal_position({-1000,-1000});
+        }
 
-//FIN MENU PAUSE
+        //FIN MENU PAUSE
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
 
         bool portail_horizontal=false;
         if((souris.x!=souris2.x)&&(souris.y!=souris2.y)){//si la position du clique change
-            projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal,Perso.get_dir());
+            projection=collision_tir(souris,Niveau_sol,Niveau_plafond,P.x,P.y,W1,H1,portail_horizontal,Perso.get_dir());
 
             souris2=souris;}
 
 
-//affichage des portails
+        //affichage des portails
 
         if (j==1){
             Portail_bleu.set_orientation(portail_horizontal);
@@ -288,12 +294,12 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();
 
-//Téléportation
-        teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
-        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
+        //Téléportation
+        teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
+        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
 
 
-//affichage du personnage
+        //affichage du personnage
         fillRect(P.x,P.y,W1+1,H1,WHITE);
         keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
@@ -306,40 +312,40 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
         Perso.affiche_perso(I,a);
 
-//        milliSleep(dt);
+        //        milliSleep(dt);
         
-//affichage numero plateforme pour debuggage
-        int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
+        //affichage numero plateforme pour debuggage
+        int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau_sol.Liste_Segment,Niveau_sol.nombre_segment);
         milliSleep(10);
         if(numero_plateforme_du_perso==-1){
             drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
         }
-//fin affichage
+        //fin affichage
 
         //sequence collision
-        Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];
-        bool* etat_collisions=Collisions(Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1);
+        Segment_plateforme NotrePlateforme=Niveau_sol.Liste_Segment[numero_plateforme_du_perso];
+        bool* etat_collisions=Collisions(Niveau_sol,Niveau_plafond,P.x,P.y,W1,H1);
 
         if(etat_collisions[0]){ //si le hero se prend le plafond
-            Perso.Change_coord_perso(P.x,Niveau1_plafond.Liste_Segment[0].altitude+Niveau1_plafond.Liste_Segment[0].epaisseur);
+            Perso.Change_coord_perso(P.x,Niveau_plafond.Liste_Segment[0].altitude+Niveau_plafond.Liste_Segment[0].epaisseur);
 
         }
-        Niveau1_plafond.draw(1);
+        Niveau_plafond.draw(1);
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
-            Niveau1_sol.draw(2);
+            Niveau_sol.draw(2);
         }
 
         if(etat_collisions[1]){ //si le hero a les pieds sur le sol
             Perso.Change_coord_perso(P.x,NotrePlateforme.altitude-H1);
             Au_Sol=true;
-            Niveau1_sol.draw(2);
+            Niveau_sol.draw(2);
         }
 
         if(!etat_collisions[1]){ //si le hero n'a pas les pieds sur la plateforme
             Au_Sol=false;
-            Niveau1_sol.draw(2);
+            Niveau_sol.draw(2);
         }
 
         if(NotrePlateforme.Vide){ //si c'est vide en dessous
@@ -355,6 +361,6 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         }
 
     }
-    Niveau1_plafond.destructeur();
-    Niveau1_sol.destructeur();
+    Niveau_plafond.destructeur();
+    Niveau_sol.destructeur();
 }

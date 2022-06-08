@@ -24,9 +24,6 @@ void plateforme::draw(int K){ //si extremite tracer mur jusqu'en bas, et tracer 
             if(K==2){
                 fillRect(Liste_Segment[i].extremite_G,Liste_Segment[i].altitude,W,1000,BLACK);}
         }
-        if(Liste_Segment[i].Vide){
-            drawString(5+Liste_Segment[i].extremite_G,WindH-10,"VIDE",RED,15);
-        }
     }
 }
 
@@ -50,6 +47,28 @@ Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero){
 }
 
 Segment_plateforme* plafond_segments_niveau_1(){
+    Segment_plateforme* Resultat=new Segment_plateforme[1];
+    Resultat[0]={0,WindW,WindH/10,9};
+
+    return Resultat;
+}
+
+Segment_plateforme* sol_segments_niveau_2(int Ventre_hero,int Taille_hero){
+    int Longueur=4;
+    Segment_plateforme* Resultat=new Segment_plateforme[Longueur];
+    Resultat[0]={0,WindW/2-2*Ventre_hero,9*WindH/10,9};
+    Resultat[1]={WindW/2-2*Ventre_hero,WindW/2+2*Ventre_hero,9*WindH/10-10,10,true};
+    Resultat[2]={WindW/2+2*Ventre_hero,WindW/2+5*Ventre_hero,3*WindH/10,9};
+    Resultat[3]={WindW/2+5*Ventre_hero,WindW,9*WindH/10-2*Taille_hero,9};
+    for(int i=0;i<Longueur;i++){
+        if(Resultat[i].Vide){
+            Resultat[i].altitude=WindH+100;
+        }
+    }
+    return Resultat;
+}
+
+Segment_plateforme* plafond_segments_niveau_2(){
     Segment_plateforme* Resultat=new Segment_plateforme[1];
     Resultat[0]={0,WindW,WindH/10,9};
 

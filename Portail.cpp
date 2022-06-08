@@ -68,7 +68,6 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
     if (orientation){ //si portail horizontal
 
         if (x<=xP+hP/2 && x>=xP-hP/2 && y+H>=yP-wP/2 && y+H<=yP+wP/2&&Au_sol){ //si dans les limites du portail
-            cout<<"x1= "<<xP<<" x2= "<<xP2<<" ";
             Au_sol=false;
 
             if (Collision[3]){//collision droite
