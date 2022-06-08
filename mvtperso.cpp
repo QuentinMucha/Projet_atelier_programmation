@@ -179,6 +179,9 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     point projection;
     while(true){
 
+        Portail_bleu.erase_portal();
+        Portail_rouge.erase_portal();
+
         bool portail_horizontal=false;
         if((souris.x!=souris2.x)&&(souris.y!=souris2.y)){//si la position du clique change
             projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
@@ -186,12 +189,13 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
 
         //affichage des portails
-        Portail_bleu.erase_portal();
-        Portail_rouge.erase_portal();
+
         if (j==1){
+            Portail_bleu.set_orientation(portail_horizontal);
             Portail_bleu.set_portal_position(projection);
         }
         if (j==3){
+            Portail_rouge.set_orientation(portail_horizontal);
             Portail_rouge.set_portal_position(projection);
         }
         Portail_bleu.Draw_portal();
@@ -199,7 +203,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
         //Téléportation
         teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
-
+        teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau1_sol,Niveau1_plafond);
 
 
         //affichage du personnage
