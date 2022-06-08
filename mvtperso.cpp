@@ -255,13 +255,25 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau){
     point souris2={WindW/2,WindH/2};
     point projection;
     bool finit=false;
+    int nb_clic_droit=0;
+    int nb_clic_gauche=0;
+
+    //Debut du jeu
     while(!finit){
+
         point V_anterieur=Perso.get_speed();
+
         //MENUS
         Menu_Pause(a,souris,j);
+
+        //Fin du jeu
         Perso.Game_Over(WindH,H1,a,souris,j,X_dep,Y_dep);
         Zone_win(Perso.get_position(),W1,H1,a,souris,j,finit);
+
+        //Réinitialisation
         if(a==114){
+            nb_clic_droit=0;
+            nb_clic_gauche=0;
             Perso.Change_coord_perso(X_dep,Y_dep);
             Perso.Change_vitesse_perso(0,0);
             Portail_bleu.erase_portal();
@@ -270,7 +282,8 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau){
             Portail_rouge.set_portal_position({-1000,-1000});
         }
 
-        //FIN MENU PAUSE
+
+        //Gestion des portail
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
 
@@ -281,23 +294,25 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau){
             souris2=souris;}
 
 
-        //affichage des portails
-
+         //affichage des portails
         if (j==1){
             Portail_bleu.set_orientation(portail_horizontal);
             Portail_bleu.set_portal_position(projection);
+            nb_clic_droit+=1;
         }
         if (j==3){
             Portail_rouge.set_orientation(portail_horizontal);
             Portail_rouge.set_portal_position(projection);
+            nb_clic_gauche+=1;
         }
         Portail_bleu.Draw_portal();
         Portail_rouge.Draw_portal();
 
         //Téléportation
-        teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
-        teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
-
+        if (nb_clic_gauche>=1 && nb_clic_droit>=1){
+            teleportation(Perso,Portail_rouge,Portail_bleu,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
+            teleportation(Perso,Portail_bleu,Portail_rouge,W1,H1,Au_Sol,Niveau_sol,Niveau_plafond);
+        }
 
         //affichage du personnage
         fillRect(P.x,P.y,W1+1,H1,WHITE);
@@ -312,15 +327,10 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6],int Niveau){
 
         Perso.affiche_perso(I,a);
 
-        //        milliSleep(dt);
-        
-        //affichage numero plateforme pour debuggage
+
         int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau_sol.Liste_Segment,Niveau_sol.nombre_segment);
         milliSleep(10);
-        if(numero_plateforme_du_perso==-1){
-            drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
-        }
-        //fin affichage
+
 
         //sequence collision
         Segment_plateforme NotrePlateforme=Niveau_sol.Liste_Segment[numero_plateforme_du_perso];
