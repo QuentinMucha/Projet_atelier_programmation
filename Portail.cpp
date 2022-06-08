@@ -189,14 +189,13 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
         milliSleep(100);
         fillCircle(40,20,30,WHITE);
     }
-    if(COLLISIONS[2]){//si collision au sol
-        portail_horizontale=true;
+    if(COLLISIONS[2]){
+
         fillCircle(60,20,30,GREEN);
         milliSleep(100);
         fillCircle(60,20,30,WHITE);
     }
-    if(COLLISIONS[3]){//si collision au sol
-        portail_horizontale=true;
+    if(COLLISIONS[3]){
         fillCircle(80,20,30,YELLOW);
         milliSleep(100);
         fillCircle(80,20,30,WHITE);
