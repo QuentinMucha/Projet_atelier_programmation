@@ -108,7 +108,7 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
     int i=0;
     int a,b;
     bool* COLLISIONS= Collisions(ASols,APlafonds,projection,0,0);
-    bool rien_touche=((!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
+    bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
     while (rien_touche){
         fillRect(projection.x,projection.y,2,2,RED);
         a=projection.x;

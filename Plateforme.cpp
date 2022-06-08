@@ -78,11 +78,13 @@ int plafond_personnage(int X_personnage,int Y_personnage,int ventre,int taille,S
 
 bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero){
     int NbrSols=ASols.nombre_segment;
+    int NbrPlafs=APlafonds.nombre_segment;
     Segment_plateforme* Sols=ASols.Liste_Segment;
     //    int NbrPlafonds=APlafonds.nombre_segment;
     Segment_plateforme* Plafonds=APlafonds.Liste_Segment;
 
     int plate_hero=plateforme_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols);
+    int plaf_perso = plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrPlafs);
     bool* Resultatt=new bool[4];  //(X,Y)
     int pied_hero=Y_hero+Taille_hero;
     int cote_droit_hero=X_hero+Ventre_hero;
@@ -129,7 +131,7 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
         }
     }
 
-    if((Y_hero)<=Plafonds[plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols)].altitude){ //si au dessus du plafond
+    if((Y_hero)<=Plafonds[plaf_perso].altitude){ //si au dessus du plafond
         Resultatt[0]=true;}
     delete[] liste_murs;
     return Resultatt;
