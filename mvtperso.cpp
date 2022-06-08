@@ -165,7 +165,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
     // Définition des plateformes
     plateforme Niveau1_sol=plateforme(4,sol_segments_niveau_1(W1,H1));
-    plateforme Niveau1_plafond=plateforme(1,plafond_segments_niveau_1());
+    plateforme Niveau1_plafond=plateforme(2,plafond_segments_niveau_1());
     Niveau1_sol.draw(2);
     Niveau1_plafond.draw(1);
 
@@ -174,14 +174,15 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
 
     Portail Portail_rouge(RED);
     Portail Portail_bleu(BLUE);
-    point souris={1000,500};
-    point souris2={1000,500};
+    point souris={WindW/2,WindH/2};
+    point souris2={WindW/2,WindH/2};
     point projection;
     while(true){
 
         bool portail_horizontal=false;
         if((souris.x!=souris2.x)&&(souris.y!=souris2.y)){//si la position du clique change
             projection=collision_tir(souris,Niveau1_sol,Niveau1_plafond,P.x,P.y,W1,H1,portail_horizontal);
+
             souris2=souris;}
 
 
@@ -214,7 +215,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         milliSleep(dt);
         
         //affichage numero plateforme pour debuggage
-        int numero_plateforme_du_perso=plateforme_personnage(P.x,P.y,W1,H1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
+        int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
         drawString(WindW-200,20,std::to_string(numero_plateforme_du_perso),RED);
         milliSleep(10);
         fillRect(WindW-200,0,200,20,WHITE);

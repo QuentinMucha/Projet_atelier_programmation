@@ -106,21 +106,16 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
     point projection={X_hero+Ventre_hero/2,Y_hero+Taille_hero/2};
     point pt_base=projection;
     int i=0;
-    int a,b;
     bool* COLLISIONS= Collisions(ASols,APlafonds,projection,0,0);
     bool rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
     while (rien_touche){
         fillRect(projection.x,projection.y,2,2,RED);
-        a=projection.x;
-        b=projection.y;
-
         projection.x = pt_base.x+i*norme.x;
         projection.y = pt_base.y+i*norme.y;
 
-        COLLISIONS= Collisions(ASols,APlafonds,projection,2,2);
+        COLLISIONS= Collisions(ASols,APlafonds,projection,4,4);
         rien_touche=((!COLLISIONS[0])&&(!COLLISIONS[1])&&(!COLLISIONS[2])&&(!COLLISIONS[3]));
         i=i+1;
-//        fillRect(a,b,2,2,WHITE);
     }
     if(COLLISIONS[0]){ //si collision au plafond
         portail_horizontale=true;
@@ -131,8 +126,22 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
     }
     if(COLLISIONS[1]){//si collision au sol
         portail_horizontale=true;
+        fillCircle(40,20,30,BLUE);
+        milliSleep(100);
+        fillCircle(40,20,30,WHITE);
     }
-
+    if(COLLISIONS[2]){//si collision au sol
+        portail_horizontale=true;
+        fillCircle(60,20,30,GREEN);
+        milliSleep(100);
+        fillCircle(60,20,30,WHITE);
+    }
+    if(COLLISIONS[3]){//si collision au sol
+        portail_horizontale=true;
+        fillCircle(80,20,30,YELLOW);
+        milliSleep(100);
+        fillCircle(80,20,30,WHITE);
+    }
     return projection;
 }
 

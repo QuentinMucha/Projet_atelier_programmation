@@ -16,7 +16,11 @@ void plateforme::draw(int K){ //si extremite tracer mur jusqu'en bas, et tracer 
             W=Liste_Segment[i].extremite_D-Liste_Segment[i].extremite_G;
             H=Liste_Segment[i].epaisseur;
             if(K==1){
-                fillRect(Liste_Segment[i].extremite_G,Liste_Segment[i].altitude,W,H,BLACK);}
+                fillRect(Liste_Segment[i].extremite_G,Liste_Segment[i].altitude,W,H,BLACK);
+                if(i+1<nombre_segment){
+                    fillRect(Liste_Segment[i].extremite_D-2,Liste_Segment[i].altitude,5,H+Liste_Segment[i+1].altitude-Liste_Segment[i].altitude,BLACK);
+                }
+            }
             if(K==2){
                 fillRect(Liste_Segment[i].extremite_G,Liste_Segment[i].altitude,W,1000,BLACK);}
         }
@@ -32,16 +36,17 @@ void plateforme::destructeur(){
 
 Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero){
     Segment_plateforme* Resultat=new Segment_plateforme[4];
-    Resultat[0]={0,WindW/2,9*WindH/10,9};
-    Resultat[1]={WindW/2,WindW/2+3*Ventre_hero,WindH+10,10,true};
-    Resultat[2]={WindW/2+3*Ventre_hero,WindW/2+5*Ventre_hero,9*WindH/10-Taille_hero,9};
+    Resultat[0]={0,WindW/2-2*Ventre_hero,9*WindH/10,9};
+    Resultat[1]={WindW/2-2*Ventre_hero,WindW/2+1*Ventre_hero,9*WindH/10-10,10,false};
+    Resultat[2]={WindW/2+1*Ventre_hero,WindW/2+5*Ventre_hero,9*WindH/10-Taille_hero,9};
     Resultat[3]={WindW/2+5*Ventre_hero,WindW,9*WindH/10-2*Taille_hero,9};
     return Resultat;
 }
 
 Segment_plateforme* plafond_segments_niveau_1(){
-    Segment_plateforme* Resultat=new Segment_plateforme[3];
-    Resultat[0]={0,WindW,WindH/10,9};
+    Segment_plateforme* Resultat=new Segment_plateforme[2];
+    Resultat[0]={0,WindW/2,WindH/10,9};
+    Resultat[1]={WindW/2,WindW,2*WindH/10,9};
 
     return Resultat;
 }
@@ -58,7 +63,7 @@ bool* Presence_mur(Segment_plateforme* Seg_plat,int Longueur){ //assert len(Seg_
 }
 
 
-int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
+int plateforme_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur){
     for(int i=0;i<Longueur;i++){
         if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
@@ -67,7 +72,7 @@ int plateforme_personnage(int X_personnage,int Y_personnage,int ventre,int taill
     return -1;
 }
 
-int plafond_personnage(int X_personnage,int Y_personnage,int ventre,int taille,Segment_plateforme* Seg_plat,int Longueur){
+int plafond_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,int Longueur){
     for(int i=0;i<Longueur;i++){
         if((X_personnage+ventre/2<=Seg_plat[i].extremite_D)&&((X_personnage+ventre/2)>=(Seg_plat[i].extremite_G))){
             return i;
@@ -83,9 +88,9 @@ bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int
     //    int NbrPlafonds=APlafonds.nombre_segment;
     Segment_plateforme* Plafonds=APlafonds.Liste_Segment;
 
-    int plate_hero=plateforme_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrSols);
-    int plaf_perso = plafond_personnage(X_hero,Y_hero,Ventre_hero,Taille_hero,Sols,NbrPlafs);
-    bool* Resultatt=new bool[4];  //(X,Y)
+    int plate_hero=plateforme_personnage(X_hero,Ventre_hero,Sols,NbrSols);
+    int plaf_perso = plafond_personnage(X_hero,Ventre_hero,Sols,NbrPlafs);
+    bool* Resultatt=new bool[4];
     int pied_hero=Y_hero+Taille_hero;
     int cote_droit_hero=X_hero+Ventre_hero;
     int cote_gauche_hero=X_hero;
