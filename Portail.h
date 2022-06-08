@@ -7,12 +7,15 @@ void mouse(point& p, int& j);
 
 class Portail {
     int h_portail=100;
-    int w_portail=10;
+    int w_portail=15;
     point position_portail={-100,-100};
     Color col;
+    bool orientation=true; //True : portail horizontal, false : portail vertical
 public:
     Portail(Color color);
     point get_portal_position();
+    bool get_orientation();
+    void set_orientation(bool Horizontal);
     void get_portal_w_h(int &w, int &h);
     void set_portal_position(point p);
     void Draw_portal();
