@@ -31,6 +31,7 @@ class Personnage{
 
 public:
     Personnage(int x, int y);
+    void Change_vitesse_perso(point V);
     point get_position();
     int get_dir();
     void gravite(bool b,int dt);
@@ -43,8 +44,9 @@ public:
     void Change_coord_perso(int X,int Y);
     void Change_vitesse_perso(int vx,int vy);
     point get_speed();
+    void Game_Over(int Wind,int H,int& a,point souris,int j,int Xdep,int Ydep);
 };
 
 
 void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]);
-
+int Norme(point P);

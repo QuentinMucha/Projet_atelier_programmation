@@ -57,37 +57,35 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
     int xP2=Port2.get_portal_position().x;
     int yP2=Port2.get_portal_position().y;
 
-    int wP=0;
-    int hP=0;
+    int wP,hP;
     Port1.get_portal_w_h(wP,hP);
-    int vx=Perso.get_speed().x;
+    point V=Perso.get_speed();
+    int vx=V.x;
+    int vy=V.y;
+    int norme=Norme(V);
 
     bool* Collision=Collisions(ASols,APlafonds,xP2,yP2,5,5);
-    //    Resultatt[3]=false;//collision droite
-    //    Resultatt[2]=false;//collision gauche
-    //    Resultatt[1]=false;//collision sol
-    //    Resultatt[0]=false;//collision plafond
+    if (orientation){ //si portail horizontal
 
-    if (orientation){
-        if (x<=xP+hP/2 && x>=xP-hP/2 && y+H>=yP-wP/2 && y+H<=yP+wP/2){
+        if (x<=xP+hP/2 && x>=xP-hP/2 && y+H>=yP-wP/2 && y+H<=yP+wP/2&&Au_sol){ //si dans les limites du portail
+            cout<<"x1= "<<xP<<" x2= "<<xP2<<" ";
             Au_sol=false;
 
-            if (Collision[3]){
-                Perso.Change_vitesse_perso(-vx-5,0);
+            if (Collision[3]){//collision droite
+                Perso.Change_vitesse_perso({-norme,0});
                 Perso.modif_dir(1);
-                Perso.Change_coord_perso(xP2-W,yP2);
+                Perso.Change_coord_perso(xP2-W-1,yP2);
             }
-            else if (Collision[2]){
-                Perso.Change_vitesse_perso(vx+5,0);
-                Perso.Change_coord_perso(xP2+W,yP2);
+            else if (Collision[2]){//collision gauche
+                Perso.Change_vitesse_perso(norme,0);
+                Perso.Change_coord_perso(xP2+W+1,yP2);
             }
-            else if (Collision[1]){
-                cout<<Collision[1]<<endl;
+            else if (Collision[1]){//collision sol
                 Perso.Change_coord_perso(xP2-W/2,yP2-wP/2-H);
                 Perso.Change_vitesse_perso(vx,-10);
 
             }
-            else{
+            else{ //collision plafond
                 Perso.Change_coord_perso(xP2,yP2);
             }
         }
@@ -106,7 +104,6 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
                     Perso.Change_coord_perso(xP2+W,yP2);
                 }
                 else if (Collision[1]){
-//                    cout<<Collision[1]<<endl;
                     Perso.Change_coord_perso(xP2-W/2,yP2-wP/2-H);
                     Perso.Change_vitesse_perso(vx,-10);
 
@@ -114,7 +111,6 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
                 else {
                     Perso.Change_coord_perso(xP2,yP2);
                 }
-
             }
         }
         if (dir==1){ //0 : orientation du perso vers la droite; 1 : orientation du perso vers la gauche
@@ -133,7 +129,6 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
                     Perso.Change_vitesse_perso(-vx+5,0);
                 }
                 else if (Collision[1]){
-                    cout<<Collision[1]<<endl;
                     Perso.Change_coord_perso(xP2-W/2,yP2-wP/2-H);
                     Perso.Change_vitesse_perso(vx,-10);
 
@@ -141,33 +136,22 @@ void teleportation(Personnage &Perso, Portail Port1, Portail Port2,int W,int H, 
                 else {
                     Perso.Change_coord_perso(xP2,yP2);
                 }
-
             }
         }
     }
-
 }
 
-
-
-
-
-
-
-
-
-
 point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Taille_hero,int Ventre_hero,bool& portail_horizontale,int DIRECTION){ //cette fonction va renvoyer la collision entre le tir et l'obstacle
-
     point_double norme={0.,0.};
-
     point projection;
+
     if (DIRECTION==1){ //gauche
         projection={X_hero,Y_hero+Taille_hero/2+5};
     }
     if (DIRECTION==0){//droite
         projection={X_hero+Ventre_hero,Y_hero+Taille_hero/2+5};
     }
+
     point Vecteur_hero_to_clique={ point_vise.x -projection.x,point_vise.y -projection.y};
     Vecteur_norme(Vecteur_hero_to_clique,norme);
     point pt_base=projection;
@@ -187,7 +171,7 @@ point collision_tir(point point_vise,plateforme ASols,plateforme APlafonds,int X
         i=i+1;
     }
     drawLine(pt_base.x,pt_base.y,projection.x,projection.y,PURPLE);
-    milliSleep(50);
+    milliSleep(30);
     drawLine(pt_base.x,pt_base.y,projection.x,projection.y,WHITE);
     if(COLLISIONS[0]){ //si collision au plafond
         portail_horizontale=true;

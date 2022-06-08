@@ -2,16 +2,40 @@
 #include "Plateformes.h"
 #include "Portail.h"
 
+void Menu_Pause(int& a,point souris,int j){
+    AlphaColor gris=AlphaColor(150,150,150,155);
+    if(a==16777216){
+        bool PAUSE=true;
+        a=-100000;
+        fillRect(0,0,WindW,WindH,gris);
+        drawString(500,500,"Pour jouer utiliser les flèches ainsi que la souris, bonne chance",RED,19);
+        drawString(500,700,"Appuyer sur R pour recommencer le niveau",RED,19);
+        while(PAUSE){
+            milliSleep(1);
+            keyboard(souris,a,j);
+
+            if(a==16777216){
+                PAUSE=false;
+                fillRect(0,0,WindW,WindH,WHITE);
+            }
+        }
+        a=-100000;
+    }
+}
+
 void Vecteur_norme(point p, point& N){
     N.x =5*1/sqrt(p.x*p.x+p.y*p.y) * p.x;
     N.y =5*1/sqrt(p.x*p.x+p.y*p.y) * p.y;
 
 }
 
+int Norme(point P){
+    return sqrt(P.x*P.x+P.y*P.y);
+}
+
 void Vecteur_norme(point p, point_double& N){
     N.x=p.x*1/sqrt(p.x*p.x+p.y*p.y);
     N.y=p.y*1/sqrt(p.x*p.x+p.y*p.y);
-    //    cout<<N.x<<" "<<N.y<<" ";
 }
 
 void keyboard(point& p, int& a, int& j) {
@@ -22,7 +46,6 @@ void keyboard(point& p, int& a, int& j) {
         getEvent(0,e);
         if(e.type==EVT_KEY_ON){
             a =  e.key;
-
         }
         if(e.type==EVT_BUT_ON){
             p.x = e.pix.x();
@@ -65,7 +88,9 @@ void Personnage::Change_vitesse_perso(int vx,int vy){
 void Personnage::Change_coord_perso(int X,int Y){
     position={X,Y};
 }
-
+void Personnage::Change_vitesse_perso(point V){
+    vitesse=V;
+}
 void Personnage::modif_vitesse(int a, bool &Au_sol){ // a variable retournée par keyboard
     //Déplacement à gauche
     if (a==16777234){
@@ -144,12 +169,54 @@ void Personnage::affiche_perso(NativeBitmap I[6], int a){
 }
 
 
+void Zone_win(point position,int& Niveau,int Ventre_hero,int Taille_hero,int& a,point souris,int j){
+    if(Niveau==1){
+        int Xvert_haut=WindW/2+7*Ventre_hero;
+        int epaisseur=150;
+        int Yvert_haut=9*WindH/10-5*Taille_hero;
+        int hauteur=3*Taille_hero;
+        AlphaColor Green=AlphaColor(0,255,0,150);
+        fillRect(Xvert_haut,Yvert_haut,epaisseur,hauteur,Green);
+        if((position.x<Xvert_haut+epaisseur)&&(position.x>Xvert_haut)&&(position.y<Yvert_haut+hauteur)&&(position.y>Yvert_haut)){
+            drawString(500,500,"YOU WON",GREEN,40);
+            a=-10000;
+            drawString(200,200,"PRESS ENTER TO SWITCH TO LEVEL ", BLACK,20);
+            bool PAUSE=true;
+            while(PAUSE){
+                milliSleep(1);
+                keyboard(souris,a,j);
+                if(a==16777220){
+                    PAUSE=false;
+                    Niveau+=1;
+                }
+            }
+            a=-100000;
+        }
+    }
+}
 
-//void Personnage::efface_perso(int W1,int H1){
 
-//    fillRect(get_position().x, get_position().y, W1, H1, WHITE);
-//}
+void Personnage::Game_Over(int Wind,int H,int& a,point souris,int j,int Xdep,int Ydep){
+    if(position.y>Wind+H){
+        AlphaColor red=AlphaColor(150,0,0,155);
+        bool PAUSE=true;
+        fillRect(0,0,WindW,WindH,red);
+        a=-10000;
+        drawString(500,500,"GAME OVER, PRESS R",BLACK);
+        while(PAUSE){
+            milliSleep(1);
 
+            keyboard(souris,a,j);
+            if(a==114){
+                PAUSE=false;
+                fillRect(0,0,WindW,WindH,WHITE);
+                position.x=Xdep;
+                position.y=Ydep;
+                vitesse={0,0};
+            }
+        }
+    }
+}
 
 //jeu
 
@@ -157,10 +224,12 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     
 
 // Définition du personnage
-    Personnage Perso(3*w/4, h/2+100);
+    int X_dep=w/4;
+    int Y_dep=h/2+100;
+    int Niveau=1;
+    Personnage Perso(X_dep,Y_dep);
     point P=Perso.get_position();
     fillRect(P.x,P.y,10,10,BLUE);
-    AlphaColor gris=AlphaColor(150,150,150,155);
 
     int a=0; //variable liée au keybord
     int j=0; //variable liée à la souris
@@ -181,23 +250,20 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
     point souris2={WindW/2,WindH/2};
     point projection;
     while(true){
+    point V_anterieur=Perso.get_speed();
+//MENUS
+    Menu_Pause(a,souris,j);
+    Perso.Game_Over(WindH,H1,a,souris,j,X_dep,Y_dep);
+    Zone_win(Perso.get_position(),Niveau,W1,H1,a,souris,j);
+    if(a==114){
+        Perso.Change_coord_perso(X_dep,Y_dep);
+        Perso.Change_vitesse_perso(0,0);
+        Portail_bleu.erase_portal();
+        Portail_rouge.erase_portal();
+        Portail_bleu.set_portal_position({-1000,-1000});
+        Portail_rouge.set_portal_position({-1000,-1000});
+    }
 
-//MENU PAUSE
-        if(a==16777216){
-            bool PAUSE=true;
-            a=-100000;
-            fillRect(0,0,WindW,WindH,gris);
-            while(PAUSE){
-                milliSleep(1);
-                keyboard(souris,a,j);
-
-                if(a==16777216){
-                    PAUSE=false;
-                    fillRect(0,0,WindW,WindH,WHITE);
-                }
-            }
-            a=-100000;
-        }
 //FIN MENU PAUSE
         Portail_bleu.erase_portal();
         Portail_rouge.erase_portal();
@@ -232,11 +298,15 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         keyboard(souris,a,j);
         Perso.modif_vitesse(a,Au_Sol);
         Naturel(Perso,Au_Sol,dt);
+        point V=Perso.get_speed();
+        if(Norme(V)>15){
+            Perso.Change_vitesse_perso(V_anterieur);
+        }
         P =Perso.get_position();
 
         Perso.affiche_perso(I,a);
 
-        milliSleep(dt);
+//        milliSleep(dt);
         
 //affichage numero plateforme pour debuggage
         int numero_plateforme_du_perso=plateforme_personnage(P.x,W1,Niveau1_sol.Liste_Segment,Niveau1_sol.nombre_segment);
@@ -244,7 +314,7 @@ void gametest(int w,int h, int W1, int H1, NativeBitmap I[6]){
         if(numero_plateforme_du_perso==-1){
             drawString(100,100,"plateforme -1 donc erreur",BLUE,13);
         }
-        //fin affichage
+//fin affichage
 
         //sequence collision
         Segment_plateforme NotrePlateforme=Niveau1_sol.Liste_Segment[numero_plateforme_du_perso];

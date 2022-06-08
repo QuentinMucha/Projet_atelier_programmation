@@ -43,7 +43,7 @@ Segment_plateforme* sol_segments_niveau_1(int Ventre_hero,int Taille_hero){
     Resultat[3]={WindW/2+5*Ventre_hero,WindW,9*WindH/10-2*Taille_hero,9};
     for(int i=0;i<Longueur;i++){
         if(Resultat[i].Vide){
-            Resultat[i].altitude=WindH+10;
+            Resultat[i].altitude=WindH+100;
         }
     }
     return Resultat;
@@ -85,6 +85,7 @@ int plafond_personnage(int X_personnage,int ventre,Segment_plateforme* Seg_plat,
     }
     return -1;
 }
+
 
 bool* Collisions(plateforme ASols,plateforme APlafonds,int X_hero,int Y_hero,int Ventre_hero,int Taille_hero){
     int NbrSols=ASols.nombre_segment;
